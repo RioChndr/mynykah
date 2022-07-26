@@ -1,0 +1,71 @@
+{
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/frontend/user",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/next:build",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "defaultConfiguration": "production",
+      "options": {
+        "root": "apps/frontend/user",
+        "outputPath": "dist/apps/frontend/user"
+      },
+      "configurations": {
+        "development": {
+          "outputPath": "tmp/apps/frontend/user"
+        },
+        "production": {}
+      }
+    },
+    "serve": {
+      "executor": "@nrwl/next:server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "frontend-user:build",
+        "dev": true,
+        "proxyConfig": "apps/frontend/user/proxy.conf.json"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "frontend-user:build:development",
+          "dev": true
+        },
+        "production": {
+          "buildTarget": "frontend-user:build:production",
+          "dev": false
+        }
+      }
+    },
+    "export": {
+      "executor": "@nrwl/next:export",
+      "options": {
+        "buildTarget": "frontend-user:build:production"
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": [
+        "coverage/apps/frontend/user"
+      ],
+      "options": {
+        "jestConfig": "apps/frontend/user/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": [
+        "{options.outputFile}"
+      ],
+      "options": {
+        "lintFilePatterns": [
+          "apps/frontend/user/**/*.{ts,tsx,js,jsx}"
+        ]
+      }
+    }
+  },
+  "tags": []
+}
