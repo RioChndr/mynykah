@@ -1,5 +1,5 @@
 {
-  "name": "rio",
+  "name": "mynykah",
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
@@ -9,14 +9,18 @@
   },
   "private": true,
   "dependencies": {
-    "@nestjs/common": "^8.0.0",
-    "@nestjs/core": "^8.0.0",
-    "@nestjs/platform-express": "^8.0.0",
+    "@nestjs/common": "^9.0.5",
+    "@nestjs/core": "^9.0.5",
+    "@nestjs/platform-express": "^9.0.5",
     "@nestjs/serve-static": "^3.0.0",
-    "@nrwl/next": "14.4.3",
+    "@nestjs/swagger": "^6.0.4",
+    "@prisma/client": "^4.1.0",
     "axios": "^0.27.2",
+    "bcrypt": "^5.0.1",
     "core-js": "^3.6.5",
     "next": "12.1.6",
+    "nodemailer": "^6.7.7",
+    "prisma": "^4.1.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "reflect-metadata": "^0.1.13",
@@ -25,8 +29,8 @@
     "tslib": "^2.3.0"
   },
   "devDependencies": {
-    "@nestjs/schematics": "^8.0.0",
-    "@nestjs/testing": "^8.0.0",
+    "@nestjs/schematics": "^9.0.1",
+    "@nestjs/testing": "^9.0.5",
     "@nrwl/cli": "14.4.3",
     "@nrwl/cypress": "14.4.3",
     "@nrwl/eslint-plugin-nx": "14.4.3",
@@ -63,5 +67,9 @@
     "ts-jest": "27.1.4",
     "ts-node": "~10.8.0",
     "typescript": "~4.7.2"
+  },
+  "prisma": {
+    "schema": "./apps/backend/database/prisma/schema.prisma",
+    "seed": "ts-node ./apps/backend/database/seed/seeding.ts"
   }
 }

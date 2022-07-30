@@ -1,0 +1,12 @@
+export const MailConfig = {
+  service: 'nodemailer',
+  stmpAuth: {
+    host: 'smtp.example.com',
+    port: 587,
+    secure: false,
+    auth: {
+      user: '',
+      pass: '',
+    },
+  },
+};
