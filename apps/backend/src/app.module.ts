@@ -6,6 +6,7 @@ import { RouteParent } from './route-parent';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AuthModule } from './api/auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -16,17 +17,8 @@ import { AuthModule } from './api/auth/auth.module';
       rootPath: join(__dirname, '../..', '/admin/static'),
       serveRoot: '/static',
     }),
-    RouterModule.register([
-      {
-        path: RouteParent.server.api,
-        module: ApiModule,
-      },
-      {
-        path: RouteParent.server.api,
-        module: AuthModule,
-      },
-    ]),
+    ConfigModule.forRoot(),
   ],
   exports: [],
 })
-export class AppModule {}
+export class AppModule { }
