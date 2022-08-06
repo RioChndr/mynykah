@@ -1,16 +1,16 @@
-import { AppProps } from 'next/app';
+import { ChakraProvider } from '@chakra-ui/react'
+import { AppPropsWithLayout } from '../type/app-type';
+import { LayoutSystem } from '../layouts/layout-system';
 import Head from 'next/head';
-import './styles.css';
+import React from 'react';
 
-function CustomApp({ Component, pageProps }: AppProps) {
-  return (
+function CustomApp(props: AppPropsWithLayout) {
+  return LayoutSystem(props,
     <>
       <Head>
-        <title>Welcome to frontend/user!</title>
+        <title>MyNykah</title>
       </Head>
-      <main className="app">
-        <Component {...pageProps} />
-      </main>
+      <props.Component {...props.pageProps} />
     </>
   );
 }

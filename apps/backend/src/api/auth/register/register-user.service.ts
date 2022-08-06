@@ -4,10 +4,10 @@ import { UserCred, UserRepository } from 'src/database/repos/user.repository';
 
 @Injectable()
 export class RegisterUserService {
-  constructor(private userRepository: UserRepository) {}
+  constructor(private userRepository: UserRepository) { }
 
   async register(user: UserCred) {
-    const isEmailExist = await this.userRepository.user().findUnique({
+    const isEmailExist = await this.userRepository.user().findFirst({
       where: {
         email: user.email,
       },
@@ -18,9 +18,9 @@ export class RegisterUserService {
     return await this.userRepository.register(user);
   }
 
-  async sendVerifyEmail(user: User) {}
+  async sendVerifyEmail(user: User) { }
 
-  async verifyEmail() {}
+  async verifyEmail() { }
 }
 
 export class EmailExistException extends Error {

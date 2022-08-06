@@ -4,7 +4,7 @@ import { AuthService } from './auth.service';
 
 @Controller('auth-user')
 export class AuthUserController {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) { }
 
   @Post('login')
   async login(@Body() body: UserCred) {

@@ -14,13 +14,16 @@ datasource db {
 model User {
   id String @id @default(uuid())
   email String @unique
-  password String
+  name String?
+  picture String?
+  password String?
   deactivedAt DateTime?
   verifidAt DateTime?
   deletedAt DateTime?
   createdAt DateTime @default(now())
   adminUser AdminUser?
   tokenVerify TokenVerify?
+  federatedCredential FederatedCredentials[]
 }
 
 model AdminUser {
@@ -53,4 +56,12 @@ model TokenVerify {
   expiredAt DateTime
   accessTime Int @default(0)
   createdAt DateTime @default(now())
+}
+
+model FederatedCredentials {
+  id Int @id @default(autoincrement())
+  subject String @unique
+  userId String
+  user User @relation(fields: [userId], references: [id])
+  provider String
 }

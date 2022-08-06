@@ -1,20 +1,22 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import styles from './index.module.scss';
+import { Button, Center, Flex } from '@chakra-ui/react';
+import Link from 'next/link';
 
 export function Index() {
-  const [message, setMessage] = useState('Init')
-  useEffect(() => {
-    axios.get('/api').then((res) => {
-      setMessage(res.data.message)
-    }).catch((err) => {
-      setMessage('error : ' + err)
-    })
-  }, [])
   return (
-    <div className={styles.page}>
-      {message}
-    </div>
+    <Center mt='3'>
+      <Flex gap='3'>
+        <Link href='/login'>
+          <Button colorScheme='blue'>
+            Login
+          </Button>
+        </Link>
+        <Link href='/register'>
+          <Button variant='outline'>
+            Register
+          </Button>
+        </Link>
+      </Flex>
+    </Center>
   );
 }
 
