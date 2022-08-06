@@ -1,16 +1,17 @@
 import { Box, Flex, Button, Text, Container, Avatar, Wrap, WrapItem, HStack, Menu, MenuButton, MenuList, MenuItem, Link } from "@chakra-ui/react";
-import { useState } from "react";
+import Router from "next/router";
+import { useAuth } from "../../lib/useAuth/useAuth";
 
 export default function Navbar(props) {
-  const [isLoggedin, setIsLoggedin] = useState(false)
+  const { user, userLogout } = useAuth({redirectIfNotAuthenticated: false})
   const ListMenu = () => {
     const list: {text: string, to: string}[] = [
       {text: "Home", to: '/'},
       {text: "Contact", to: '/contact'},
       {text: "About", to: '/about'},
     ]
-    return list.map((menu) => (
-      <Link href={menu.to}>
+    return list.map((menu, i) => (
+      <Link href={menu.to} key={i}>
         <Text>
           {menu.text}
         </Text>
@@ -33,18 +34,18 @@ export default function Navbar(props) {
             {ListMenu()}
           </HStack>
           {
-            !isLoggedin ?
-            <Button size='sm' onClick={() => setIsLoggedin(true)}>
+            !user ?
+            <Button size='sm' onClick={() => Router.push('/login')}>
               Login
             </Button>
             :
             <Menu>
               <MenuButton>
-                <Avatar name="Rio chandra" bg='primary' color='white' outline='1'/>
+                <Avatar name={user.name} src={user.picture} bg='primary' color='white' outline='1'/>
               </MenuButton>
               <MenuList>
                 <MenuItem>Account</MenuItem>
-                <MenuItem onClick={() => setIsLoggedin(false)}>Logout</MenuItem>
+                <MenuItem onClick={() => userLogout()}>Logout</MenuItem>
               </MenuList>
             </Menu>
           }

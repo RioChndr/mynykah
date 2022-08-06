@@ -1,9 +1,9 @@
-import { Box, Center, Text } from "@chakra-ui/react";
+import { Alert, AlertIcon, AlertTitle, Box, Center, CircularProgress, Text } from "@chakra-ui/react";
 import Head from "next/head";
 import Router from "next/router";
 import { useEffect, useState } from "react";
-import { LoginWithGoogle } from "../auth/auth-provider";
-import { UserCredGoogle } from "../auth/type";
+import { UserCredGoogle } from "../lib/useAuth/type";
+import { useLogin } from "../lib/useLogin/useLogin";
 
 declare global {
   interface Window {
@@ -12,14 +12,21 @@ declare global {
 }
 
 export function Login(props){
-  const [error, setError] = useState(null)
+  const {
+    isDone,
+    isError,
+    isLoading,
+    doLogin
+  } = useLogin('google')
+
+  useEffect(() => {
+    if(isDone){
+      Router.push('/home')
+    }
+  }, [isDone])
 
   function onSignIn(googleUser: UserCredGoogle) {
-    LoginWithGoogle(googleUser).then((val) => {
-      Router.push('/home')
-    }).catch((err) => {
-
-    })
+    doLogin(googleUser)
   }
 
   // Register to window
@@ -43,8 +50,13 @@ export function Login(props){
               Login
             </Text>
           </Box>
-          <Center>
-            {error ? <div>{error}</div> : ''}
+          <Center display='flex' flexDirection='column'>
+            {isError ? 
+            <Alert status='error' mb='3'>
+              <AlertIcon />
+              <AlertTitle>Failed to login, please try again</AlertTitle>
+            </Alert>
+             : ''}
             <div id="g_id_onload"
                 data-client_id={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
                 data-context="signup"
@@ -61,6 +73,9 @@ export function Login(props){
                 data-size="medium"
                 data-logo_alignment="left">
             </div>
+            {
+              isLoading ? <CircularProgress isIndeterminate color='green.300' /> : ''
+            }
           </Center>
         </Box>
       </Center>
