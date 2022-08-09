@@ -2,8 +2,8 @@ import { Alert, AlertIcon, AlertTitle, Box, Center, CircularProgress, Text } fro
 import Head from "next/head";
 import Router from "next/router";
 import { useEffect, useState } from "react";
-import { UserCredGoogle } from "../lib/useAuth/type";
-import { useLogin } from "../lib/useLogin/useLogin";
+import { ResultProvider } from "../lib/auth/type";
+import { useAuth } from "../lib/auth/useAuth";
 
 declare global {
   interface Window {
@@ -12,21 +12,25 @@ declare global {
 }
 
 export function Login(props){
-  const {
-    isDone,
-    isError,
-    isLoading,
-    doLogin
-  } = useLogin('google')
+  const [isDone, setIsDone] = useState<Boolean>(false)
+  const [isError, setIsError] = useState<any>()
+  const [isLoading, setIsLoading] = useState<Boolean>(false)
+  const { loginStrategy, saveToken, fetchUser } = useAuth()
 
-  useEffect(() => {
-    if(isDone){
+  async function onSignIn(googleUser: any) {
+    try{
+      setIsLoading(true)
+      const token: ResultProvider = await loginStrategy.withGoogle(googleUser)
+      console.log(token)
+      saveToken(token.token)
+      await fetchUser()
+      setIsDone(true)
       Router.push('/home')
+    }catch(err){
+      console.log(err)
+      setIsError('failed login')
     }
-  }, [isDone])
-
-  function onSignIn(googleUser: UserCredGoogle) {
-    doLogin(googleUser)
+    setIsLoading(false)
   }
 
   // Register to window

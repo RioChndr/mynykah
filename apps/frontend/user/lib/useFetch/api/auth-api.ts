@@ -1,11 +1,9 @@
-import { useFetch } from "../useFetch"
+import axios from "axios"
 
 export async function ApiLoginWithGoogle(payload: { token: string }) {
-  const fetch = useFetch()
-  return await fetch.post('/api/auth/provider/google', payload)
+  return await axios.post('/api/auth/provider/google', payload)
 }
 
 export function ApiGetMe() {
-  const fetch = useFetch()
-  return fetch.get('/api/auth-user/me')
+  return axios.get('/api/auth-user/me')
 }

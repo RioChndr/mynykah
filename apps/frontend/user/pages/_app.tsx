@@ -1,9 +1,9 @@
-import { AppPropsWithLayout } from '../type/app-type';
+import { AppPropsOptions } from '../type/app-type';
 import { LayoutSystem } from '../layouts/layout-system';
 import Head from 'next/head';
 import React from 'react';
 
-function CustomApp(props: AppPropsWithLayout) {
+function CustomApp(props: AppPropsOptions) {
   return <LayoutSystem {...props}>
     <>
       <Head>

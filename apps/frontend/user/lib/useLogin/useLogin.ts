@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { CheckAndUpdateAuthToken, SaveToLocalstorage } from "../useAuth/auth-utils"
+import { useAuth } from "../auth/useAuth"
 import { ApiLoginWithGoogle } from "../useFetch/api/auth-api"
 
 type ResultProvider = Promise<{ token: string }>
@@ -9,21 +9,22 @@ export function useLogin(provider: string) {
   const [isError, setIsError] = useState<any>()
   const [isLoading, setIsLoading] = useState<Boolean>(false)
 
-  const doLogin = (creds?: any) => {
-    setIsLoading(true)
-    const providers: Record<string, (creds?: any) => ResultProvider> = {
-      'google': LoginWithGoogle
-    }
-    providers[provider](creds).then((result) => {
-      SaveToLocalstorage(result.token)
-      CheckAndUpdateAuthToken()
+  const { fetchUser } = useAuth()
+
+  const doLogin = async (creds?: any) => {
+    try {
+      setIsLoading(true)
+      const providers: Record<string, (creds?: any) => ResultProvider> = {
+        'google': LoginWithGoogle
+      }
+      const result = await providers[provider](creds)
+      await fetchUser()
       setIsDone(true)
-    }).catch((error) => {
+    } catch (error) {
       setIsError(error)
       console.log(error)
-    }).finally(() => {
-      setIsLoading(false)
-    })
+    }
+    setIsLoading(false)
   }
 
 

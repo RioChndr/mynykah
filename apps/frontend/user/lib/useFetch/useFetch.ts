@@ -1,10 +1,14 @@
-import Axios, { AxiosInstance } from 'axios'
+import axios from 'axios'
+import { useEffect } from 'react'
 
-export function useFetch() {
-  if (!window.__FETCH_LIB) {
-    window.__FETCH_LIB = Axios.create({
-      baseURL: process.env.NEXT_PUBLIC_API_BASE_URL
-    })
+export function initAxios() {
+  useEffect(() => {
+    axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_BASE_URL
+  }, [])
+}
+
+export function setTokenAxios(token: string) {
+  axios.defaults.headers.common = {
+    'Authorization': 'bearer ' + token
   }
-  return window.__FETCH_LIB
 }

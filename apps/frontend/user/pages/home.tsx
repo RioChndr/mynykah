@@ -1,14 +1,14 @@
 import { Button } from "@chakra-ui/react"
-import { useEffect } from "react"
-import { useAuth } from "../lib/useAuth/useAuth"
-import { NextPageWithLayout } from "../type/app-type"
+import { AuthContext, useAuth } from "../lib/auth/useAuth"
+import { NextPageOptions } from "../type/app-type"
 
-const HomePage: NextPageWithLayout = (props) => {
-  const { user } = useAuth()
+const HomePage: NextPageOptions = (props) => {
   return (
     <>
       <div>
-        Hello {JSON.stringify(user)}
+        Hello <AuthContext.Consumer>
+          {value => value?.user?.picture}
+        </AuthContext.Consumer>
       </div>
       <div>
 
