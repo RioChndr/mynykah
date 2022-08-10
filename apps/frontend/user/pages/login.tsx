@@ -20,10 +20,7 @@ export function Login(props){
   async function onSignIn(googleUser: any) {
     try{
       setIsLoading(true)
-      const token: ResultProvider = await loginStrategy.withGoogle(googleUser)
-      console.log(token)
-      saveToken(token.token)
-      await fetchUser()
+      await loginStrategy.withGoogle(googleUser)
       setIsDone(true)
       Router.push('/home')
     }catch(err){

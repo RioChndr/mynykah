@@ -27,7 +27,7 @@ export function AuthContextProvider(props: { children: JSX.Element }) {
 
   useEffect(() => {
     const localToken = localStorage.getItem(local.localToken)
-    setToken(localToken)
+    saveToken(localToken)
     const localUser = localStorage.getItem(local.localUser)
     if(localUser){
       setUser(JSON.parse(localUser))
@@ -36,6 +36,7 @@ export function AuthContextProvider(props: { children: JSX.Element }) {
 
   const saveToken = (token:string) => {
     setTokenAxios(token)
+    setToken(token)
     localStorage.setItem(local.localToken, token)
   }
 
@@ -59,8 +60,16 @@ export function AuthContextProvider(props: { children: JSX.Element }) {
     Router.push('/login')
   }
 
+  const login = async (token:string) => {
+    saveToken(token)
+    return fetchUser()
+  }
+
   const loginStrategy = {
-    withGoogle: LoginWithGoogle,
+    withGoogle: async (payload:any) => {
+      const token = await LoginWithGoogle(payload)
+      await login(token.token)
+    },
   }
 
   const valueProvider = useMemo<AuthProviderInterface>(() => ({
