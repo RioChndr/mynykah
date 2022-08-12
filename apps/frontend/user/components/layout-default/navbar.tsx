@@ -1,8 +1,9 @@
-import { Box, Flex, Button, Text, Container, Avatar, Wrap, WrapItem, HStack, Menu, MenuButton, MenuList, MenuItem, Link, useBreakpointValue, useColorModeValue, ButtonGroup, IconButton } from "@chakra-ui/react";
+import { Box, Flex, Button, Text, Container, Avatar, Wrap, WrapItem, HStack, Menu, MenuButton, MenuList, MenuItem, Link, useBreakpointValue, useColorModeValue, ButtonGroup, IconButton, Drawer, useDisclosure, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody, Stack } from "@chakra-ui/react";
 import Router from "next/router";
 import NextLink from 'next/link'
 import { useAuth } from "../../lib/auth/useAuth";
 import { FiMenu } from 'react-icons/fi'
+import React from "react";
 
 export default function Navbar() {
   const authContext = useAuth()
@@ -11,15 +12,15 @@ export default function Navbar() {
     {text: "Contact", to: '/contact'},
     {text: "About", to: '/about'},
   ]
-  const ListMenuComponent = () => {
+  const ListMenuComponent = ({ isVertical = false }) => {
     return (
-      <ButtonGroup variant="link" spacing="8">
+      <Stack spacing="8" direction={isVertical ? 'column' : 'row'}>
         {Listmenu.map((item, i) => (
           <NextLink href={item.to} key={i} passHref>
-            <Button as='a'>{item.text}</Button>
+            <Button as='a' variant="link">{item.text}</Button>
           </NextLink>
         ))}
-      </ButtonGroup>
+      </Stack>
     )
   }
 
@@ -44,6 +45,41 @@ export default function Navbar() {
       </Menu>
     )
   }
+  
+  const DrawerSide = ({ isDesktop }) => {
+    const buttonRef = React.useRef()
+
+    const { onOpen, isOpen, onClose } = useDisclosure()
+    return (
+      <>
+        <IconButton
+          ref={buttonRef}
+          variant="ghost"
+          icon={<FiMenu />}
+          aria-label="Open Menu"
+          onClick={onOpen}
+        />
+        <Drawer
+          isOpen={isOpen}
+          onClose={onClose}
+          placement='right'
+          finalFocusRef={buttonRef}
+        >
+          <DrawerOverlay></DrawerOverlay>
+          <DrawerContent>
+            <DrawerCloseButton />
+            <DrawerHeader>
+              Mynykah
+            </DrawerHeader>
+
+            <DrawerBody>
+              <ListMenuComponent isVertical={true} />
+            </DrawerBody>
+          </DrawerContent>
+        </Drawer>
+      </>
+    )
+  }
 
   const isDesktop = useBreakpointValue({ base: false, lg: true })
   return (
@@ -58,15 +94,11 @@ export default function Navbar() {
             </Link>
               {isDesktop ? (
                 <Flex justify="space-between" flex="1">
-                  {ListMenuComponent()}
-                  {ProfileMenuComponent()}
+                  <ListMenuComponent />
+                  <ProfileMenuComponent />
                 </Flex>
               ) : (
-                <IconButton
-                  variant="ghost"
-                  icon={<FiMenu />}
-                  aria-label="Open Menu"
-                />
+                <DrawerSide isDesktop={isDesktop} />
               )}
           </HStack>
         </Container>
