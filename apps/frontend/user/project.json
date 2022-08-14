@@ -26,7 +26,8 @@
       "options": {
         "buildTarget": "frontend-user:build",
         "dev": true,
-        "proxyConfig": "apps/frontend/user/proxy.conf.json"
+        "proxyConfig": "apps/frontend/user/proxy.conf.json",
+        "hostname": "localhost"
       },
       "configurations": {
         "development": {

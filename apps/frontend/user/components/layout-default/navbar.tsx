@@ -3,7 +3,7 @@ import Router from "next/router";
 import NextLink from 'next/link'
 import { useAuth } from "../../lib/auth/useAuth";
 import { FiMenu } from 'react-icons/fi'
-import React from "react";
+import React, { useEffect } from "react";
 
 interface MenuItemInterface {
   text: string
@@ -126,7 +126,7 @@ export default function Navbar() {
     }
 
     return (
-      <>
+      <div>
         <IconButton
           ref={buttonRef}
           variant="ghost"
@@ -154,11 +154,12 @@ export default function Navbar() {
             </DrawerBody>
           </DrawerContent>
         </Drawer>
-      </>
+      </div>
     )
   }
 
-  const isDesktop = useBreakpointValue({ base: false, lg: true })
+  let isDesktop = useBreakpointValue({ base: false, lg: true }, {fallback: 'base'})
+  
   return (
     <Box as="section" pb={{ base: '12', md: '24' }}>
       <Box as="nav" bg="bg-surface" boxShadow={useColorModeValue('sm', 'sm-dark')}>

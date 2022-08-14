@@ -19,27 +19,48 @@ export function Login(props){
   const { loginStrategy, saveToken, fetchUser } = useAuth()
   const [count, setCount] = useState(0)
 
-  const ButtonLoginGoogle = ({ refButton }) => (
-    <>
-      <div id="g_id_onload"
-        data-client_id={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
-        data-context="signup"
-        data-ux_mode="popup"
-        data-callback="LoginOnSignin"
-        data-auto_select="true">
-      </div>
+  const ButtonLoginGoogle = ({ refButton }) => {
+    const [isClient, setIsClient] = useState(false)
+    // rerender button google every time rendering
+    useEffect(() => {
+      setIsClient(true)
+      initButtonGoogle()
+    })
+    return !isClient ? null : (
+      <>
+        <div id="g_id_onload"
+          data-client_id={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}
+          data-context="signup"
+          data-ux_mode="popup"
+          data-callback="LoginOnSignin"
+          data-auto_select="true">
+        </div>
 
-      <div className="g_id_signin"
-        ref={refButton}
-        data-type="standard"
-        data-shape="rectangular"
-        data-theme="outline"
-        data-text="signup_with"
-        data-size="medium"
-        data-logo_alignment="left">
-      </div>
-    </>
-  )
+        <div className="g_id_signin"
+          ref={refButton}
+          data-type="standard"
+          data-shape="rectangular"
+          data-theme="outline"
+          data-text="signup_with"
+          data-size="medium"
+          data-logo_alignment="left">
+        </div>
+      </>
+    )
+  }
+
+  const initButtonGoogle = () => {
+    if(!window.google) return;
+    window.google.accounts.id.initialize({
+      client_id:process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+      callback: onSignIn,
+    })
+    window.google.accounts.id.prompt()
+    window.google.accounts.id.renderButton(refButtonGoogle.current, {
+      theme: 'outline',
+      size: 'large',
+    })
+  }
 
   const refButtonGoogle = React.createRef()
   useEffect(() => {
@@ -47,18 +68,7 @@ export function Login(props){
       console.log('window.google not found')
       return;
     }
-    console.log(refButtonGoogle)
-    if (window.google) {
-      window.google.accounts.id.initialize({
-        client_id:process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
-        callback: onSignIn,
-      })
-      window.google.accounts.id.prompt()
-      window.google.accounts.id.renderButton(refButtonGoogle.current, {
-        theme: 'outline',
-        size: 'large',
-      })
-     }
+    initButtonGoogle()
   })
 
   async function onSignIn(googleUser: any) {

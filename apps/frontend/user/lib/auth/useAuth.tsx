@@ -1,10 +1,11 @@
-import axios from "axios";
 import Router from "next/router";
-import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { ApiGetMe } from "../useFetch/api/auth-api";
 import { setTokenAxios } from "../useFetch/useFetch";
 import { LoginWithGoogle } from "./auth-provider";
-import { AuthProviderInterface, AuthUserInterface, ResultProvider } from "./type";
+import { AuthProviderInterface, AuthUserInterface } from "./type";
+import { deleteCookie, removeCookies, setCookie } from 'cookies-next'
+import { configUseAuth } from "./config";
 
 export const AuthContext = React.createContext<AuthProviderInterface>({
   user: null,
@@ -19,16 +20,11 @@ export const AuthContext = React.createContext<AuthProviderInterface>({
 export function AuthContextProvider(props: { children: JSX.Element }) {
   const [user, setUser] = useState<AuthUserInterface>()
   const [token, setToken] = useState('')
-  
-  const local = {
-    localToken: 'access_token',
-    localUser: 'auth_user',
-  }
 
   useEffect(() => {
-    const localToken = localStorage.getItem(local.localToken)
+    const localToken = localStorage.getItem(configUseAuth.storage.localToken)
     saveToken(localToken)
-    const localUser = localStorage.getItem(local.localUser)
+    const localUser = localStorage.getItem(configUseAuth.storage.localUser)
     if(localUser){
       setUser(JSON.parse(localUser))
     }
@@ -37,12 +33,14 @@ export function AuthContextProvider(props: { children: JSX.Element }) {
   const saveToken = (token:string) => {
     setTokenAxios(token)
     setToken(token)
-    localStorage.setItem(local.localToken, token)
+    localStorage.setItem(configUseAuth.storage.localToken, token)
+    // save to cookies
+    setCookie(configUseAuth.storage.localToken, token)
   }
 
   const saveUser = (user:AuthUserInterface) => {
     setUser(user)
-    localStorage.setItem(local.localUser, JSON.stringify(user))
+    localStorage.setItem(configUseAuth.storage.localUser, JSON.stringify(user))
   }
   
   const fetchUser = async () => {
@@ -53,11 +51,12 @@ export function AuthContextProvider(props: { children: JSX.Element }) {
   }
 
   const logout = () => {
-    localStorage.removeItem(local.localToken)
-    localStorage.removeItem(local.localUser)
+    localStorage.removeItem(configUseAuth.storage.localToken)
+    localStorage.removeItem(configUseAuth.storage.localUser)
     setUser(null)
     setToken(null)
-    Router.push('/login')
+    deleteCookie(configUseAuth.storage.localToken)
+    Router.push(configUseAuth.loginPage)
   }
 
   const login = async (token:string) => {
@@ -77,7 +76,7 @@ export function AuthContextProvider(props: { children: JSX.Element }) {
     fetchUser,
     loginStrategy,
     saveToken,
-    logout
+    logout,
   }), [user])
 
   return (

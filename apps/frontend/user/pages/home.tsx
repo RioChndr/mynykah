@@ -1,5 +1,6 @@
 import { Button, Container } from "@chakra-ui/react"
 import axios from "axios"
+import Router from "next/router"
 import { useState } from "react"
 import { AuthContext, useAuth } from "../lib/auth/useAuth"
 import { NextPageOptions } from "../type/app-type"
@@ -43,8 +44,8 @@ const HomePage: NextPageOptions = (props) => {
       </div>
       {ShowData()}
       <div>
-        <Button onClick={() => fetchData()} isLoading={isLoading}>
-          Test click me
+        <Button onClick={() => Router.push('/dashboard')} isLoading={isLoading}>
+          Go to dashbaord
         </Button>
       </div>
     </Container>
