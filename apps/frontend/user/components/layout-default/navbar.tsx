@@ -14,7 +14,7 @@ interface MenuItemInterface {
 export default function Navbar() {
   const authContext = useAuth()
   const Listmenu:MenuItemInterface[] = [
-    {text: "Home", to: '/home'},
+    {text: "Home", to: '/'},
     {text: "Contact", to: '/contact'},
     {text: "About", to: '/about'},
   ]
@@ -161,15 +161,15 @@ export default function Navbar() {
   let isDesktop = useBreakpointValue({ base: false, lg: true }, {fallback: 'base'})
   
   return (
-    <Box as="section" pb={{ base: '12', md: '24' }}>
+    <Box as="section" pb={{ base: '4', md: '8' }}>
       <Box as="nav" bg="bg-surface" boxShadow={useColorModeValue('sm', 'sm-dark')}>
         <Container py={{ base: '4', lg: '5' }}>
           <HStack spacing="10" justify="space-between">
-            <Link href='/'>
-              <Text fontSize='2xl' fontWeight='bold'>
+            <NextLink href='/' passHref>
+              <Text as='a' fontSize='2xl' fontWeight='bold'>
                 Mynykah
               </Text>
-            </Link>
+            </NextLink>
               {isDesktop ? (
                 <Flex justify="space-between" flex="1">
                   <ListMenuComponent />
