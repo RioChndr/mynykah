@@ -1,5 +1,6 @@
 import { Box, Button, Container, Flex, Grid, GridItem, Heading, Icon, Image, Stack, Text, useBreakpointValue, Wrap, WrapItem } from "@chakra-ui/react"
 import Link from "next/link"
+import Router from "next/router"
 import { FiPlus } from 'react-icons/fi'
 
 /**
@@ -15,7 +16,13 @@ function CardInvitation({
   id = '1'
 }) {
   return (
-    <GridItem borderWidth='1px' borderRadius='lg' overflow='hidden' w='100%' flexDir='column'>
+    <GridItem
+      borderWidth='1px'
+      borderRadius='lg'
+      overflow='hidden'
+      w='100%'
+      flexDir='column'
+    >
       <Image src={image} width='full' height='300' objectFit='cover'/>
       <Box p='6'>
         <Heading size='lg'>{name}</Heading>
@@ -26,10 +33,10 @@ function CardInvitation({
           {description}
         </Text>
         <Flex justifyContent='space-between' mt='3'>
-          <Button variant='outline' size='sm'>
+          <Button variant='outline' size='sm' onClick={() => Router.push(`/invite-card/${id}`)}>
             Buka undangan
           </Button>
-          <Button size='sm'>
+          <Button size='sm' onClick={() => Router.push(`/dashboard/invite-card/${id}/detail`)}>
             Lihat Detail
           </Button>
         </Flex>
