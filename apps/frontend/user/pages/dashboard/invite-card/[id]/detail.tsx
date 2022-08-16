@@ -1,24 +1,23 @@
-import { Box, Button, Container, Flex, FormControl, FormLabel, Grid, GridItem, Heading, Icon, Stat, StatArrow, StatHelpText, StatLabel, StatNumber, Switch, Text } from "@chakra-ui/react"
+import { Box, Button, Container, Flex, FormControl, FormLabel, Grid, GridItem, Heading, Highlight, Icon, Link, Stat, StatArrow, StatHelpText, StatLabel, StatNumber, Switch, Text } from "@chakra-ui/react"
 import { ButtonBack } from "apps/frontend/user/components/common/ButtonBack"
 import { useRouter } from "next/router"
-import { FiArrowUpRight } from "react-icons/fi";
+import { AiOutlineWarning } from "react-icons/ai";
 import { BsQuestionCircle, BsPencilSquare } from "react-icons/bs";
+import { HeadingSection } from "apps/frontend/user/components/common/HeadingSection";
+import { InvitationHeaderPage } from "apps/frontend/user/components/invitation-card/InvitationHeaderPage";
 
 export function InviteCardDetail(){
   const router = useRouter()
   const id = router.query.id
 
+  const pageInviteCard = {
+    editInfo: `/dashboard/invite-card/${id}/edit/info`,
+    editRsvp: `/dashboard/invite-card/${id}/edit/rsvp`,
+  }
+
   return (
     <Container display='flex' flexDirection='column' gap='3'>
-      <Flex justifyContent='space-between'>
-        <ButtonBack></ButtonBack>
-        <Button rightIcon={<FiArrowUpRight />}>
-          Buka undangan
-        </Button>
-      </Flex>
-      <Text fontSize='lg'>
-        Undangan Rio chandra dan nabilla
-      </Text>
+      <InvitationHeaderPage name={'Undangan Rio chandra dan nabilla'} />
       <Flex direction='column' gap='3'>
         <HeadingSection
           title="Statistik"
@@ -36,10 +35,10 @@ export function InviteCardDetail(){
       <Flex direction='column' gap='3'>
         <HeadingSection title="Fitur undangan" description="Anda bisa pilih Fitur undangan sesuai keinginan anda"/>
         <Flex direction='column' gap='3' width={{base:'full', md:'50%'}}>
-          <FeatureControl name="Fitur Halaman Undangan"/>
-          <FeatureControl name="RSVP"/>
-          <FeatureControl name="Our Story"/>
-          <FeatureControl name="Keluarga"/>
+          <FeatureControl name="Fitur Halaman Undangan" editPage={pageInviteCard.editInfo}/>
+          <FeatureControl name="RSVP" editPage={pageInviteCard.editRsvp}/>
+          <FeatureControl name="Our Story" comingSoon/>
+          <FeatureControl name="Keluarga" comingSoon/>
         </Flex>
       </Flex>
     </Container>
@@ -47,19 +46,6 @@ export function InviteCardDetail(){
 }
 
 export default InviteCardDetail
-
-function HeadingSection ({title, description}){
-  return (
-    <Box>
-      <Heading size='lg'>
-        {title}
-      </Heading>
-      <Text>
-        {description}
-      </Text>
-    </Box>
-  )
-}
 
 function CardStatistic ({name, number}){
   return (
@@ -78,17 +64,35 @@ function CardStatistic ({name, number}){
   )
 }
 
-function FeatureControl({name}){
+function FeatureControl(props: {name: string, editPage?: string, comingSoon?: boolean}){
+  const ComingSoon = () => {
+    if(!props.comingSoon) return null;
+    return (
+      <Box as='span'
+        background="orange.300"
+        px='2' py= '1'
+        ml='3'
+        rounded='full'
+        color='white'
+        fontSize='xs'
+      >
+        Coming Soon <Icon as={AiOutlineWarning}></Icon>
+      </Box>
+    )
+  }
   return (
     <Flex justifyContent='space-between' alignItems='center'>
       <FormControl display='flex' alignItems='center' gap='3'>
-        <Switch></Switch>
+        <Switch disabled={props.comingSoon}></Switch>
         <FormLabel mb='0'>
-          {name}
+          {props.name}
+          <ComingSoon />
         </FormLabel>
         <Icon as={BsQuestionCircle} ml='3' mb='0'/>
       </FormControl>
-      <Icon as={BsPencilSquare} color='gray' cursor='pointer'/>
+      <Link href={props.editPage}>
+        <Icon as={BsPencilSquare} color='gray' cursor='pointer'/>
+      </Link>
     </Flex>
   )
 }
