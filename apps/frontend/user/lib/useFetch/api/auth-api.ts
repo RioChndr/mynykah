@@ -1,9 +1,9 @@
-import axios from "axios"
+import { api } from "../api"
 
 export async function ApiLoginWithGoogle(payload: { token: string }) {
-  return await axios.post('/api/auth/provider/google', payload)
+  return await api.post('/api/auth/provider/google', payload)
 }
 
 export function ApiGetMe() {
-  return axios.get('/api/auth-user/me')
+  return api.get('/api/auth-user/me')
 }

@@ -76,7 +76,7 @@ export function Login(props){
       setIsLoading(true)
       await loginStrategy.withGoogle(googleUser)
       setIsDone(true)
-      Router.push('/home')
+      Router.push('/dashboard')
     }catch(err){
       console.log(err)
       setIsError('failed login')

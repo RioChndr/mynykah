@@ -1,5 +1,3 @@
-import React, { Dispatch, SetStateAction } from "react"
-
 export type ResultProvider = { token: string }
 
 export interface AuthUserInterface {

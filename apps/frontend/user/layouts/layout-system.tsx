@@ -1,17 +1,13 @@
 import { ChakraProvider } from "@chakra-ui/react";
-import axios from "axios";
-import React, { ReactElement, useEffect } from "react";
+import React, { ReactElement } from "react";
 import { AuthContextProvider } from "../lib/auth/useAuth";
-import { initAxios } from "../lib/useFetch/useFetch";
 import { ThemeChakra } from "../theme/theme";
 import { AppPropsOptions } from "../type/app-type";
 import LayoutDefault from "./default";
 
-export function LayoutSystem (props: AppPropsOptions & {children?:ReactElement}) {
-  initAxios()
-
+export function LayoutSystem(props: AppPropsOptions & { children?: ReactElement }) {
   // base component must be provide ChalkraProvider
-  const BaseComponent = ({children}) => (
+  const BaseComponent = ({ children }) => (
     <AuthContextProvider>
       <ChakraProvider theme={ThemeChakra}>
         {children}
@@ -19,10 +15,10 @@ export function LayoutSystem (props: AppPropsOptions & {children?:ReactElement})
     </AuthContextProvider>
   )
 
-  if(props.Component.noLayout){
+  if (props.Component.noLayout) {
     return <BaseComponent>{props.children}</BaseComponent>
   }
-  if(props.Component.getLayout){
+  if (props.Component.getLayout) {
     return <BaseComponent>{props.Component.getLayout(props)}</BaseComponent>
   }
   return <BaseComponent><LayoutDefault>{props.children}</LayoutDefault></BaseComponent>

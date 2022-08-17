@@ -1,7 +1,11 @@
 import { Box, Button, Container, Flex, Grid, GridItem, Heading, Icon, Image, Stack, Text, useBreakpointValue, Wrap, WrapItem } from "@chakra-ui/react"
+import { GetServerSideProps } from "next"
 import Link from "next/link"
 import Router from "next/router"
 import { FiPlus } from 'react-icons/fi'
+import { imageUploadUrl } from "../../lib/file-helper/image-upload-url"
+import { api, apiSetContextSSR } from "../../lib/useFetch/api"
+import { useInvitationCardList } from "../../lib/useFetch/api/invitationcard-api"
 
 /**
  * @todo Create : 
@@ -23,7 +27,7 @@ function CardInvitation({
       w='100%'
       flexDir='column'
     >
-      <Image src={image} width='full' height='300' objectFit='cover'/>
+      <Image src={imageUploadUrl(image)} width='full' height='300' objectFit='cover'/>
       <Box p='6'>
         <Heading size='lg'>{name}</Heading>
         <Text size='xs'>
@@ -75,12 +79,29 @@ function CardCreateInvitation(){
  * - bind api
  */
 export function DashboardIndex(){
+  const { data, isLoading, isError } = useInvitationCardList()
   let isDesktop = useBreakpointValue({ base: false, md: true })
   const templateColumnGrid = {
     base: '1fr',
     md: 'repeat(2, 1fr)',
     lg: 'repeat(3, 1fr)'
   }
+
+  function ListCardInvitation () {
+    if(isLoading) return <Text>Loading ...</Text>
+    if(isError) return <Text textColor='red'>Terjadi kesalahan, {JSON.stringify(isError)}</Text>
+    if(data) return data.map((v) => {
+      return (
+        <CardInvitation
+          name={`${v.nameMale} dan ${v.nameFemale}`}
+          date={v.date}
+          image={v.imageThumbnail}
+          id={v.id}
+        />
+      )
+    })
+  }
+
   return (
     <>
       <Container>
@@ -99,11 +120,7 @@ export function DashboardIndex(){
         </Flex>
         <Grid mt='6' templateColumns={templateColumnGrid} gap='3'>
           {!isDesktop && <CardCreateInvitation />}
-          <CardInvitation />
-          <CardInvitation />
-          <CardInvitation />
-          <CardInvitation />
-          <CardInvitation />
+          {ListCardInvitation()}
         </Grid>
       </Container>
     </>

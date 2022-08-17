@@ -1,11 +1,10 @@
+import { deleteCookie, setCookie } from 'cookies-next';
 import Router from "next/router";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { ApiGetMe } from "../useFetch/api/auth-api";
-import { setTokenAxios } from "../useFetch/useFetch";
 import { LoginWithGoogle } from "./auth-provider";
-import { AuthProviderInterface, AuthUserInterface } from "./type";
-import { deleteCookie, removeCookies, setCookie } from 'cookies-next'
 import { configUseAuth } from "./config";
+import { AuthProviderInterface, AuthUserInterface } from "./type";
 
 export const AuthContext = React.createContext<AuthProviderInterface>({
   user: null,
@@ -19,30 +18,26 @@ export const AuthContext = React.createContext<AuthProviderInterface>({
 
 export function AuthContextProvider(props: { children: JSX.Element }) {
   const [user, setUser] = useState<AuthUserInterface>()
-  const [token, setToken] = useState('')
 
+  // run on componentDidMount
   useEffect(() => {
-    const localToken = localStorage.getItem(configUseAuth.storage.localToken)
-    saveToken(localToken)
     const localUser = localStorage.getItem(configUseAuth.storage.localUser)
-    if(localUser){
+    if (localUser) {
       setUser(JSON.parse(localUser))
     }
   }, [])
 
-  const saveToken = (token:string) => {
-    setTokenAxios(token)
-    setToken(token)
+  const saveToken = (token: string) => {
     localStorage.setItem(configUseAuth.storage.localToken, token)
     // save to cookies
     setCookie(configUseAuth.storage.localToken, token)
   }
 
-  const saveUser = (user:AuthUserInterface) => {
+  const saveUser = (user: AuthUserInterface) => {
     setUser(user)
     localStorage.setItem(configUseAuth.storage.localUser, JSON.stringify(user))
   }
-  
+
   const fetchUser = async () => {
     const val = await ApiGetMe()
     const user = val.data
@@ -54,18 +49,17 @@ export function AuthContextProvider(props: { children: JSX.Element }) {
     localStorage.removeItem(configUseAuth.storage.localToken)
     localStorage.removeItem(configUseAuth.storage.localUser)
     setUser(null)
-    setToken(null)
     deleteCookie(configUseAuth.storage.localToken)
     Router.push(configUseAuth.loginPage)
   }
 
-  const login = async (token:string) => {
+  const login = async (token: string) => {
     saveToken(token)
     return fetchUser()
   }
 
   const loginStrategy = {
-    withGoogle: async (payload:any) => {
+    withGoogle: async (payload: any) => {
       const token = await LoginWithGoogle(payload)
       await login(token.token)
     },
