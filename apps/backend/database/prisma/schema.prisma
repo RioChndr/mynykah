@@ -24,6 +24,7 @@ model User {
   adminUser AdminUser?
   tokenVerify TokenVerify?
   federatedCredential FederatedCredentials[]
+  invitationCards InvitationCard[]
 }
 
 model AdminUser {
@@ -64,4 +65,42 @@ model FederatedCredentials {
   userId String
   user User @relation(fields: [userId], references: [id])
   provider String
+}
+
+model InvitationCard {
+  id String @id @default(uuid())
+  alias String? @unique
+  userId String
+  user User @relation(fields: [userId], references: [id])
+  
+  nameMale String
+  nameFemale String
+  date DateTime
+  location String?
+  locationCoord String?
+  imageCouple String?
+  imageThumbnail String?
+  rsvpText String?
+  createdAt DateTime @default(now())
+
+  feature InvitationCardFeatures?
+  guest InvitationCardGuest[]
+}
+
+model InvitationCardFeatures {
+  cardId String @unique
+  card InvitationCard @relation(fields: [cardId], references: [id])
+  enableRsvp Boolean @default(true)
+  enableOurstory Boolean @default(false)
+  enableFamily Boolean @default(false)
+}
+
+model InvitationCardGuest {
+  id Int @id @default(autoincrement())
+  cardId String
+  card InvitationCard @relation(fields: [cardId], references: [id])
+  name String
+  status String
+  comment String?
+  createdAt DateTime @default(now())
 }

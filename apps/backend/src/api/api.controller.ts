@@ -12,7 +12,10 @@ export class ApiController {
   @NeedAuth()
   @Get('secret')
   secret(@Req() request: any) {
-    return `secreet, hello ${JSON.stringify(request.user)}`;
+    return {
+      message: 'hello world',
+      user: request.user
+    };
   }
 
   @NeedAuth(RoleType.ADMIN)
