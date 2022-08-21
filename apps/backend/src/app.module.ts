@@ -10,12 +10,14 @@ import { ConfigModule } from '@nestjs/config';
 import { MulterModule } from '@nestjs/platform-express';
 import { StorageUpload } from './utils/file/storage-upload';
 import { memoryStorage } from 'multer';
+import { FileManageModule } from './file-manage/file-manage.module';
 
 @Module({
   imports: [
     DatabaseModule,
     ApiModule,
     AuthModule,
+    FileManageModule,
     MulterModule.register({
       storage: memoryStorage(),
     }),
