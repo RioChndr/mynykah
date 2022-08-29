@@ -1,0 +1,21 @@
+.heart_animation {
+  animation-name: heart-beat-on;
+  animation-timing-function: 'ease-in';
+  animation-duration: 200ms;
+  color: #e31b23 !important;
+}
+
+@keyframes heart-beat-on {
+  0% {
+    color: white;
+    transform: scale(1);
+  }
+  
+  25% {
+    transform: scale(1.7);
+  }
+
+  100%{
+    transform: scale(1);
+  }
+}
