@@ -1,3 +1,5 @@
-export const imageUploadUrl = (filename: string) => {
-  return process.env.NEXT_PUBLIC_API_BASE_URL + '/api/file/' + filename
+import { join } from "path"
+
+export const imageUploadUrl = (filePath: string) => {
+  return join(process.env.DO_SPACES_SUBDOMAIN, filePath)
 }

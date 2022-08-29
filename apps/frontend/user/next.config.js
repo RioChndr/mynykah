@@ -10,6 +10,9 @@ const nextConfig = {
     // See: https://github.com/gregberge/svgr
     svgr: false,
   },
+  env: {
+    DO_SPACES_SUBDOMAIN: process.env.DO_SPACES_SUBDOMAIN
+  }
 };
 
 module.exports = withNx(nextConfig);

@@ -8,6 +8,7 @@ function CustomApp(props: AppPropsOptions) {
     <>
       <Head>
         <title>MyNykah</title>
+        <link rel="icon" type="image/x-icon" href="/icon.png" />
       </Head>
       <props.Component {...props.pageProps} />
     </>

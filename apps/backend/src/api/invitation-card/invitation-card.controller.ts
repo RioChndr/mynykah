@@ -3,7 +3,7 @@ import { FileFieldsInterceptor } from "@nestjs/platform-express";
 import { ApiTags } from "@nestjs/swagger";
 import { User } from "@prisma/client";
 import { GetUser, NeedAuth } from "src/decorators/need-auth.decorator";
-import { FileImageProcessMultiple, FileProcessed } from "src/pipe/file-resize.pipe";
+import { FileImageProcessMultiple, FileProcessed } from "src/file-manage/file-resize.pipe";
 import { InvitationCardService } from "./invitation-card.service";
 import { InvitationCardCreateDTO, InvitationCardUpdateDTO } from "./type";
 
@@ -17,15 +17,15 @@ export class InvitationCardController {
   @NeedAuth()
   @Post('/create')
   @UseInterceptors(FileFieldsInterceptor([
-    { name: 'fileImageCouple', maxCount: 1 },
-    { name: 'fileImageThumbnail', maxCount: 1 },
+    { name: 'imageCouple', maxCount: 1 },
+    { name: 'imageThumbnail', maxCount: 1 },
   ]))
   create(
     @Body() body: InvitationCardCreateDTO,
     @GetUser() user: User,
     @UploadedFiles(FileImageProcessMultiple) files: {
-      fileImageCouple: FileProcessed[],
-      fileImageThumbnail: FileProcessed[],
+      imageCouple: FileProcessed[],
+      imageThumbnail: FileProcessed[],
     }
   ) {
     if (body.date) body.date = new Date(body.date)
@@ -38,8 +38,10 @@ export class InvitationCardController {
       return null
     }
 
-    body.imageCouple = getFileProcessed(files.fileImageCouple)
-    body.imageThumbnail = getFileProcessed(files.fileImageThumbnail)
+    console.log(body)
+
+    body.imageCouple = getFileProcessed(files.imageCouple)
+    body.imageThumbnail = getFileProcessed(files.imageThumbnail)
 
     return this.invCardService.create(body, user)
   }
@@ -64,10 +66,11 @@ export class InvitationCardController {
   async update(
     @Param('id') id: string,
     @GetUser() user: User,
-    @Body() payload: InvitationCardUpdateDTO
+    @Body() body: InvitationCardUpdateDTO
   ) {
+    if (body.date) body.date = new Date(body.date)
     await this.invCardService.isTheOwnerWithError(id, user)
-    return this.invCardService.update(id, payload)
+    return this.invCardService.update(id, body)
   }
 
 

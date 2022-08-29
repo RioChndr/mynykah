@@ -1,10 +1,8 @@
-import { Box, Button, Container, Flex, Grid, GridItem, Heading, Icon, Image, Stack, Text, useBreakpointValue, Wrap, WrapItem } from "@chakra-ui/react"
-import { GetServerSideProps } from "next"
+import { Box, Button, Container, Flex, Grid, GridItem, Heading, Icon, Image, Text, useBreakpointValue } from "@chakra-ui/react"
 import Link from "next/link"
 import Router from "next/router"
 import { FiPlus } from 'react-icons/fi'
 import { imageUploadUrl } from "../../lib/file-helper/image-upload-url"
-import { api, apiSetContextSSR } from "../../lib/useFetch/api"
 import { useInvitationCardList } from "../../lib/useFetch/api/invitationcard-api"
 
 /**
@@ -27,7 +25,7 @@ function CardInvitation({
       w='100%'
       flexDir='column'
     >
-      <Image src={imageUploadUrl(image)} width='full' height='300' objectFit='cover'/>
+      <Image src={imageUploadUrl(image)} width='full' height='300' objectFit='cover' />
       <Box p='6'>
         <Heading size='lg'>{name}</Heading>
         <Text size='xs'>
@@ -49,14 +47,14 @@ function CardInvitation({
   )
 }
 
-function CardCreateInvitation(){
+function CardCreateInvitation() {
   return (
     <Link href='/dashboard/invite-card/create'>
       <Box
         cursor='pointer'
         borderWidth='1px'
         borderRadius='lg'
-        p={{base: '6', md: '3'}}
+        p={{ base: '6', md: '3' }}
         borderColor='primary'
         textAlign='center'
         color='primary'
@@ -69,7 +67,7 @@ function CardCreateInvitation(){
           Buat undangan baru
         </Text>
         <Icon as={FiPlus} w={4} h={4}></Icon>
-      </Box>  
+      </Box>
     </Link>
   )
 }
@@ -78,7 +76,7 @@ function CardCreateInvitation(){
  * @todo 
  * - bind api
  */
-export function DashboardIndex(){
+export function DashboardIndex() {
   const { data, isLoading, isError } = useInvitationCardList()
   let isDesktop = useBreakpointValue({ base: false, md: true })
   const templateColumnGrid = {
@@ -87,12 +85,13 @@ export function DashboardIndex(){
     lg: 'repeat(3, 1fr)'
   }
 
-  function ListCardInvitation () {
-    if(isLoading) return <Text>Loading ...</Text>
-    if(isError) return <Text textColor='red'>Terjadi kesalahan, {JSON.stringify(isError)}</Text>
-    if(data) return data.map((v) => {
+  function ListCardInvitation() {
+    if (isLoading) return <Text>Loading ...</Text>
+    if (isError) return <Text textColor='red'>Terjadi kesalahan, {JSON.stringify(isError)}</Text>
+    if (data) return data.map((v, index) => {
       return (
         <CardInvitation
+          key={index}
           name={`${v.nameMale} dan ${v.nameFemale}`}
           date={v.date}
           image={v.imageThumbnail}
@@ -115,7 +114,7 @@ export function DashboardIndex(){
             </Text>
           </Box>
           <Box>
-          {isDesktop && <CardCreateInvitation />}
+            {isDesktop && <CardCreateInvitation />}
           </Box>
         </Flex>
         <Grid mt='6' templateColumns={templateColumnGrid} gap='3'>
