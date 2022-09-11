@@ -72,6 +72,7 @@ export class FileImageProcessMultiple implements PipeTransform<Record<string, In
 
   async transform(value: Record<string, InputFileImageProcess>, metadata: ArgumentMetadata): Promise<Record<string, FileProcessed | FileProcessed[]>> {
     const result = {}
+    if (!value) return null
     for (let i = 0; i < Object.keys(value).length; i++) {
       const key = Object.keys(value)[i];
       const image = value[key]

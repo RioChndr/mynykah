@@ -2,10 +2,11 @@ import { Body, Controller, Get, Param, Post, Put, UploadedFiles, UseInterceptors
 import { FileFieldsInterceptor } from "@nestjs/platform-express";
 import { ApiTags } from "@nestjs/swagger";
 import { User } from "@prisma/client";
-import { GetUser, NeedAuth } from "src/decorators/need-auth.decorator";
-import { FileImageProcessMultiple, FileProcessed } from "src/file-manage/file-resize.pipe";
+import { GetUser, NeedAuth } from "../../decorators/need-auth.decorator";
+import { getFileUrlProcessed } from "../../file-manage/file-manager.helper";
+import { FileImageProcessMultiple, FileProcessed } from "../../file-manage/file-resize.pipe";
 import { InvitationCardService } from "./invitation-card.service";
-import { InvitationCardCreateDTO, InvitationCardThumbnailDTO, InvitationCardUpdateDTO } from "./type";
+import { InvitationCardCreateDTO, InvitationCardUpdateDTO } from "./type";
 
 @ApiTags('Invitation Card')
 @Controller('invitation-card')
@@ -69,15 +70,7 @@ export class InvitationCardController {
     },
     @Param('id') id: string
   ) {
-    const getFileProcessed = (file: FileProcessed[]) => {
-      if (Array.isArray(file) && file.length > 0) {
-        if (file[0]) {
-          return file[0].location
-        }
-      }
-      return null
-    }
 
-    this.invCardService.updateThumbnail(id, getFileProcessed(files.imageThumbnail))
+    this.invCardService.updateThumbnail(id, getFileUrlProcessed(files.imageThumbnail))
   }
 }
