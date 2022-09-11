@@ -1,0 +1,132 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgres"
+  url      = env("DATABASE_URL")
+}
+
+
+model User {
+  id String @id @default(uuid())
+  email String @unique
+  name String?
+  picture String?
+  password String?
+  deactivedAt DateTime?
+  verifidAt DateTime?
+  deletedAt DateTime?
+  createdAt DateTime @default(now())
+  adminUser AdminUser?
+  tokenVerify TokenVerify?
+  federatedCredential FederatedCredentials[]
+  invitationCards InvitationCard[]
+  invitationCardGalleryLike InvitationCardGalleryLike[]
+  invitationCardRsvp InvitationCardRSVP[]
+}
+
+model AdminUser {
+  id Int @id @default(autoincrement())
+  user User @relation(fields: [userId], references: [id])
+  userId String @unique
+  roleId Int
+  role AdminRoleUser @relation(fields: [roleId], references: [id])
+}
+
+model AdminRoleUser {
+  id Int @id @default(autoincrement())
+  name String
+  permission AdminPermission[]
+  users AdminUser[]
+}
+
+model AdminPermission {
+  id Int @id @default(autoincrement())
+  name String
+  adminRoleUser AdminRoleUser @relation(fields: [adminRoleUserId], references: [id])
+  adminRoleUserId Int
+}
+
+model TokenVerify {
+  id Int @id @default(autoincrement())
+  token String
+  userId String @unique
+  user User @relation(fields: [userId], references: [id])
+  expiredAt DateTime
+  accessTime Int @default(0)
+  createdAt DateTime @default(now())
+}
+
+model FederatedCredentials {
+  id Int @id @default(autoincrement())
+  subject String @unique
+  userId String
+  user User @relation(fields: [userId], references: [id])
+  provider String
+}
+
+// =======================
+// 💎 Invitation Card area
+model InvitationCard {
+  id String @id @default(uuid())
+  alias String? @unique
+  userId String
+  user User @relation(fields: [userId], references: [id])
+  
+  nameMale String
+  nameFemale String
+  date DateTime
+  location String?
+  locationCoord String?
+  imageThumbnail String?
+  galleries InvitationCardGallery[]
+  rsvp InvitationCardRSVP[]
+  createdAt DateTime @default(now())
+}
+
+model InvitationCardGallery {
+  id String @id @default(uuid())
+  cardId String
+  card InvitationCard @relation(fields: [cardId], references: [id])
+  
+  caption String
+  image String
+  totalLikes Int
+  likes InvitationCardGalleryLike[]
+
+  createdAt DateTime @default(now())
+  deleteAt DateTime
+}
+
+model InvitationCardGalleryLike {
+  id Int @id
+  userId String
+  user User @relation(fields: [userId], references: [id])
+  galleryId String
+  galleryCard InvitationCardGallery @relation(fields: [galleryId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model InvitationCardRSVP {
+  id String @id @default(uuid())
+  cardId String
+  card InvitationCard @relation(fields: [cardId], references: [id])
+  userId String?
+  user User? @relation(fields: [userId], references: [id])
+  name String
+  gift Int?
+  status RSVPStatus
+  reason String
+  createdAt DateTime @default(now())
+}
+
+enum RSVPStatus {
+  attended
+  notAttended
+  maybe
+}
+
