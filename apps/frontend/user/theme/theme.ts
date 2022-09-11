@@ -1,16 +1,21 @@
-import { extendTheme } from "@chakra-ui/react"
+import { ComponentStyleConfig, extendTheme } from "@chakra-ui/react"
 
-const themeCustom = {
+const Container: ComponentStyleConfig = {
+  baseStyle: {
+    maxW: 'container.xl'
+  },
+}
+
+export const ThemeChakra = extendTheme({
   colors: {
-    primary: 'teal'
+    primary: '#319795' // teal.500
   },
   components: {
     Button: {
       defaultProps: {
         colorScheme: 'teal',
       }
-    }
-  }
-}
-
-export const ThemeChakra = extendTheme(themeCustom)
+    },
+    Container,
+  },
+})

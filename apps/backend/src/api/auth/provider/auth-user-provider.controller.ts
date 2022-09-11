@@ -16,7 +16,9 @@ export class AuthUserProviderController {
     @Body()
     body: ProviderGoogleDTO
   ) {
+    console.log(body)
     const federate = await this.authUserProviderService.loginGoogle(body)
+    console.log(federate)
     return this.authService.signAccessToken(federate.user)
   }
 }

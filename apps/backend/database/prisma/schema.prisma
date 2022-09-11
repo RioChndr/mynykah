@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgres"
   url      = env("DATABASE_URL")
 }
 
@@ -24,6 +24,9 @@ model User {
   adminUser AdminUser?
   tokenVerify TokenVerify?
   federatedCredential FederatedCredentials[]
+  invitationCards InvitationCard[]
+  invitationCardGalleryLike InvitationCardGalleryLike[]
+  invitationCardRsvp InvitationCardRSVP[]
 }
 
 model AdminUser {
@@ -65,3 +68,65 @@ model FederatedCredentials {
   user User @relation(fields: [userId], references: [id])
   provider String
 }
+
+// =======================
+// 💎 Invitation Card area
+model InvitationCard {
+  id String @id @default(uuid())
+  alias String? @unique
+  userId String
+  user User @relation(fields: [userId], references: [id])
+  
+  nameMale String
+  nameFemale String
+  date DateTime
+  location String?
+  locationCoord String?
+  imageThumbnail String?
+  galleries InvitationCardGallery[]
+  rsvp InvitationCardRSVP[]
+  createdAt DateTime @default(now())
+}
+
+model InvitationCardGallery {
+  id String @id @default(uuid())
+  cardId String
+  card InvitationCard @relation(fields: [cardId], references: [id])
+  
+  caption String
+  image String
+  totalLikes Int
+  likes InvitationCardGalleryLike[]
+
+  createdAt DateTime @default(now())
+  deleteAt DateTime
+}
+
+model InvitationCardGalleryLike {
+  id Int @id
+  userId String
+  user User @relation(fields: [userId], references: [id])
+  galleryId String
+  galleryCard InvitationCardGallery @relation(fields: [galleryId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model InvitationCardRSVP {
+  id String @id @default(uuid())
+  cardId String
+  card InvitationCard @relation(fields: [cardId], references: [id])
+  userId String?
+  user User? @relation(fields: [userId], references: [id])
+  name String
+  gift Int?
+  status RSVPStatus
+  reason String
+  createdAt DateTime @default(now())
+}
+
+enum RSVPStatus {
+  attended
+  notAttended
+  maybe
+}
+

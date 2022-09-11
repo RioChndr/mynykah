@@ -1,0 +1,16 @@
+version: '3.1'
+
+services:
+  db_postgres:
+    container_name: db_postgres_mynykah
+    image: postgres
+    environment:
+      POSTGRES_DB: mynykah
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password123
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    ports: 
+      - "8875:5432"
+    restart: unless-stopped

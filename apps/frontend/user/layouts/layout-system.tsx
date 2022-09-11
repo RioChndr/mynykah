@@ -1,19 +1,28 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import React, { ReactElement } from "react";
+import { AuthContextProvider } from "../lib/auth/useAuth";
+import { SwrConfigProvider } from "../lib/useFetch/swr-config-provider";
 import { ThemeChakra } from "../theme/theme";
-import { AppPropsWithLayout } from "../type/app-type";
+import { AppPropsOptions } from "../type/app-type";
 import LayoutDefault from "./default";
 
-export function LayoutSystem (props: AppPropsWithLayout, page: ReactElement) {
+export function LayoutSystem(props: AppPropsOptions & { children?: ReactElement }) {
   // base component must be provide ChalkraProvider
-  const BaseComponent = ({children}) => (
-    <ChakraProvider theme={ThemeChakra}>
-      {children}
-    </ChakraProvider>
+  const BaseComponent = ({ children }) => (
+    <AuthContextProvider>
+      <SwrConfigProvider>
+        <ChakraProvider theme={ThemeChakra}>
+          {children}
+        </ChakraProvider>
+      </SwrConfigProvider>
+    </AuthContextProvider>
   )
 
-  if(props.Component.noLayout){
-    return <BaseComponent>{page}</BaseComponent>
+  if (props.Component.noLayout) {
+    return <BaseComponent>{props.children}</BaseComponent>
   }
-  return props.Component.getLayout ?? <BaseComponent><LayoutDefault>{page}</LayoutDefault></BaseComponent>
+  if (props.Component.getLayout) {
+    return <BaseComponent>{props.Component.getLayout(props)}</BaseComponent>
+  }
+  return <BaseComponent><LayoutDefault>{props.children}</LayoutDefault></BaseComponent>
 }
