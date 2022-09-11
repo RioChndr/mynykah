@@ -2,15 +2,17 @@ import { ApiProperty } from "@nestjs/swagger"
 
 export class InvitationCardCreateDTO {
   @ApiProperty({ required: false })
-  nameMale: string
+  nameMale?: string
   @ApiProperty({ required: false })
-  nameFemale: string
+  nameFemale?: string
   @ApiProperty({ required: false })
-  date: Date
+  date?: Date
   @ApiProperty({ required: false })
-  location: string
+  location?: string
   @ApiProperty({ required: false })
-  locationCoord: string
+  locationCoord?: string
+  imageThumbnail?: string
+  information?: string
 }
 
 export class InvitationCardUpdateDTO extends InvitationCardCreateDTO {

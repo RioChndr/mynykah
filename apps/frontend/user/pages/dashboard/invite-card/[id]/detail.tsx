@@ -18,7 +18,7 @@ export function InviteCardDetail() {
 
   return (
     <Container display='flex' flexDirection='column' gap='3'>
-      <InvitationHeaderPage name={'Undangan Rio chandra dan nabilla'} />
+      <InvitationHeaderPage />
       <Flex direction='column' gap='3'>
         <HeadingSection
           title="Statistik"

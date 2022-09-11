@@ -1,6 +1,6 @@
 import { Box, Button, Center, Checkbox, Container, Flex, Grid, Heading, Input, Radio, RadioGroup, Stack, Text } from "@chakra-ui/react"
-import { InvitationContainer } from "../../components/invitation-card/Container"
-import { InvitationFormGift } from "../../components/invitation-card/FormGift"
+import { InvitationContainer } from "../../../components/invitation-card/Container"
+import { InvitationFormGift } from "../../../components/invitation-card/FormGift"
 
 export function InvitationNotJoin() {
   const reasons = [

@@ -2,6 +2,7 @@ import { Box, Button, Container, Flex, Grid, GridItem, Heading, Icon, Image, Tex
 import Link from "next/link"
 import Router from "next/router"
 import { FiPlus } from 'react-icons/fi'
+import { ButtonOpenInvitationCard } from "../../components/invitation-card/ButtonOpen"
 import { imageUploadUrl } from "../../lib/file-helper/image-upload-url"
 import { useInvitationCardList } from "../../lib/useFetch/api/invitationcard-api"
 
@@ -29,15 +30,13 @@ function CardInvitation({
       <Box p='6'>
         <Heading size='lg'>{name}</Heading>
         <Text size='xs'>
-          {date}
+          {new Date(date).toLocaleString()}
         </Text>
         <Text my='3'>
           {description}
         </Text>
         <Flex justifyContent='space-between' mt='3'>
-          <Button variant='outline' size='sm' onClick={() => Router.push(`/invite-card/${id}`)}>
-            Buka undangan
-          </Button>
+          <ButtonOpenInvitationCard id={id} size='sm' variant='outline' />
           <Button size='sm' onClick={() => Router.push(`/dashboard/invite-card/${id}/detail`)}>
             Lihat Detail
           </Button>

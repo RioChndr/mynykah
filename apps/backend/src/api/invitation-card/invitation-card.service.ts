@@ -1,6 +1,6 @@
 import { DbConnectorService } from "@backend/database/connector/db-connector.service";
 import { BadRequestException, Injectable } from "@nestjs/common";
-import { Prisma, User } from "@prisma/client";
+import { Prisma, User, InvitationCard } from "@prisma/client";
 import { InvitationCardCreateDTO } from "./type";
 
 @Injectable()
@@ -9,21 +9,24 @@ export class InvitationCardService {
     private db: DbConnectorService
   ) { }
   create(payload: InvitationCardCreateDTO, user: User) {
-    const data: Prisma.InvitationCardCreateInput = {
-      ...payload,
+    const data: any = {
       user: { connect: { id: user.id } }
     }
+    Object.assign(data, payload)
     return this.db.invitationCard.create({
       data: data
     })
   }
 
-  getOne(id: string) {
+  getOne(id: string, include: { galleries?: boolean } = {}) {
     return this.db.invitationCard.findFirst({
       where: {
         id,
         deleteAt: null
-      }
+      },
+      include: {
+        galleries: include.galleries
+      },
     })
   }
 
@@ -49,7 +52,7 @@ export class InvitationCardService {
     Object.assign(data, payloadUpdate)
     return this.db.invitationCard.update({
       where: { id },
-      data,
+      data: data as any,
     })
   }
 

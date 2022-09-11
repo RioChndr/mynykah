@@ -18,7 +18,6 @@ export function InvitationForm(props: InvitationFormProps) {
     date: '',
     location: '',
     locationCoord: '',
-    imageCouple: '',
     imageThumbnail: ''
   }
 
@@ -51,14 +50,6 @@ export function InvitationForm(props: InvitationFormProps) {
           <Text>
             Abadikan kenangan anda dan beri tahu semua orang
           </Text>
-          <FieldForm
-            name="imageCouple"
-            label="Foto Kebersamaan"
-            type='file'
-            propsInput={{
-              accept: "image/*",
-            }}
-          />
           <FieldForm
             name="imageThumbnail"
             label="Foto thumbnail besar"

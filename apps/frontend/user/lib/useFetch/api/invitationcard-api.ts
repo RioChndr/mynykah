@@ -1,20 +1,10 @@
 import useSWR from 'swr';
 import { api } from '../api';
 import { fetcher, SwrHooks } from "../fetcher";
+import { InvitationCard, InvitationCardGallery } from "@prisma/client";
 
-export interface DataInvitationCard {
-  id?: string
-  alias?: string
-  userId?: string
-  nameMale?: string
-  nameFemale?: string
-  date?: string
-  location?: string
-  locationCoord?: string
-  imageCouple?: string
-  imageThumbnail?: string
-  rsvpText?: string
-  createdAt?: string
+export interface DataInvitationCard extends InvitationCard {
+  galleries?: InvitationCardGallery[]
 }
 
 export function useInvitationCardList() {
@@ -25,6 +15,12 @@ export function useInvitationCardList() {
         refreshInterval: 10 * 1000
       }
     ),
+  )
+}
+
+export function useInvitationCardDetail(id: string) {
+  return SwrHooks<DataInvitationCard>(
+    useSWR(`/api/invitation-card/detail/${id}`),
   )
 }
 

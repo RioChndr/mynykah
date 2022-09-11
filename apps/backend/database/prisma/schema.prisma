@@ -83,6 +83,7 @@ model InvitationCard {
   location String?
   locationCoord String?
   imageThumbnail String?
+  information String?
   galleries InvitationCardGallery[]
   rsvp InvitationCardRSVP[]
   createdAt DateTime @default(now())

@@ -1,6 +1,6 @@
 import { Box, Button, Center, Container, Flex, Grid, Heading, Input, Stack } from "@chakra-ui/react"
-import { InvitationContainer } from "../../components/invitation-card/Container"
-import { InvitationFormGift } from "../../components/invitation-card/FormGift"
+import { InvitationContainer } from "../../../components/invitation-card/Container"
+import { InvitationFormGift } from "../../../components/invitation-card/FormGift"
 
 export function InvitationJoin() {
 

@@ -24,11 +24,13 @@ export class InvitationCardController {
     @Body() body: InvitationCardCreateDTO,
     @GetUser() user: User,
     @UploadedFiles(FileImageProcessMultiple) files: {
-      imageCouple: FileProcessed[],
       imageThumbnail: FileProcessed[],
     }
   ) {
     if (body.date) body.date = new Date(body.date)
+    if (files?.imageThumbnail) {
+      body.imageThumbnail = getFileUrlProcessed(files.imageThumbnail)
+    }
     return this.invCardService.create(body, user)
   }
 
@@ -71,6 +73,6 @@ export class InvitationCardController {
     @Param('id') id: string
   ) {
 
-    this.invCardService.updateThumbnail(id, getFileUrlProcessed(files.imageThumbnail))
+    return this.invCardService.updateThumbnail(id, getFileUrlProcessed(files.imageThumbnail))
   }
 }
