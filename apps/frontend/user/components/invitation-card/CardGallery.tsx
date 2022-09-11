@@ -1,6 +1,7 @@
 import { Box, Circle, Flex, Heading, Image, Text, useBreakpointValue } from "@chakra-ui/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { RiArrowLeftSLine, RiArrowRightSLine, RiHeartFill, RiPlayFill } from 'react-icons/ri';
+import { ShadowBgImage } from "../../style/css-helper";
 import HeartStyle from '../../style/heart-style.module.css';
 
 export interface CardGalleryCuteProps {
@@ -46,7 +47,7 @@ export const CardGalleryCuteList = (props: { items: CardGalleryCuteProps[] }) =>
       <Flex ref={containerList} gap='3' flexWrap='nowrap' overflow='auto' mt='3'>
         {
           props.items.map((prop) => (
-            <CardGalleryCute {...prop} />
+            <InvitationCardGalleryCute {...prop} />
           ))
         }
       </Flex>
@@ -70,7 +71,7 @@ export const HeartAction = ({ heart }) => {
   return <RiHeartFill size='40' color={heart ? '#e31b23' : 'white'} className={inAnimation ? HeartStyle['heart_animation'] : ''} />
 }
 
-export function CardGalleryCute(props: CardGalleryCuteProps) {
+export function InvitationCardGalleryCute(props: CardGalleryCuteProps) {
   const [heart, setHeart] = useState(false)
   const [totalHeart, setTotalHeart] = useState(0)
   const widthResponsive = useBreakpointValue({
@@ -153,16 +154,7 @@ export function CardGalleryCute(props: CardGalleryCuteProps) {
       </Box>
       <Box position='absolute' top='0' left='0' display='flex' alignItems='end' w='full' h='full' p='6'
         zIndex={10}
-        _before={{
-          content: `""`,
-          zIndex: -1,
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          background: 'linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(36, 36, 36, 0.5) 100%, rgba(36, 36, 36, 0.5) 100%);',
-          width: '100%',
-          height: '100%'
-        }}
+        _before={ShadowBgImage}
       >
         <VideoButton />
         <Flex

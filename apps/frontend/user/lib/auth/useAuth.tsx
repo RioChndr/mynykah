@@ -55,6 +55,12 @@ export function AuthContextProvider(props: { children: JSX.Element }) {
 
   const login = async (token: string) => {
     saveToken(token)
+    // wait 1 sec to avoid strange thing
+    await new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve(true)
+      }, 1000);
+    })
     return fetchUser()
   }
 
