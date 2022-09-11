@@ -36,13 +36,19 @@ export class InvitationCardService {
     })
   }
 
-  async update(id: string, payloadUpdate: InvitationCardUpdateDTO) {
+  async update(id: string, payloadUpdate: Prisma.InvitationCardUpdateInput) {
     const data = await this.getOne(id)
     if (!data) throw new BadRequestException(`Invitation card ${id} not found`)
     Object.assign(data, payloadUpdate)
     return this.db.invitationCard.update({
       where: { id },
       data,
+    })
+  }
+
+  async updateThumbnail(id: string, urlThumbnail: string) {
+    return this.update(id, {
+      imageThumbnail: urlThumbnail
     })
   }
 

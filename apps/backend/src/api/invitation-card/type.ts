@@ -11,10 +11,14 @@ export class InvitationCardCreateDTO {
   location: string
   @ApiProperty({ required: false })
   locationCoord: string
-  @ApiProperty({ required: false })
-  imageCouple: any
-  @ApiProperty({ required: false })
-  imageThumbnail: any
 }
 
-export class InvitationCardUpdateDTO extends InvitationCardCreateDTO { }
+export class InvitationCardUpdateDTO extends InvitationCardCreateDTO {
+  imageThumbnail?: string
+}
+
+
+export class InvitationCardThumbnailDTO {
+  @ApiProperty({ required: false })
+  imageThumbnail: string
+}

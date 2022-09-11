@@ -5,7 +5,7 @@ import { User } from "@prisma/client";
 import { GetUser, NeedAuth } from "src/decorators/need-auth.decorator";
 import { FileImageProcessMultiple, FileProcessed } from "src/file-manage/file-resize.pipe";
 import { InvitationCardService } from "./invitation-card.service";
-import { InvitationCardCreateDTO, InvitationCardUpdateDTO } from "./type";
+import { InvitationCardCreateDTO, InvitationCardThumbnailDTO, InvitationCardUpdateDTO } from "./type";
 
 @ApiTags('Invitation Card')
 @Controller('invitation-card')
@@ -17,7 +17,6 @@ export class InvitationCardController {
   @NeedAuth()
   @Post('/create')
   @UseInterceptors(FileFieldsInterceptor([
-    { name: 'imageCouple', maxCount: 1 },
     { name: 'imageThumbnail', maxCount: 1 },
   ]))
   create(
@@ -29,20 +28,6 @@ export class InvitationCardController {
     }
   ) {
     if (body.date) body.date = new Date(body.date)
-    const getFileProcessed = (file: FileProcessed[]) => {
-      if (Array.isArray(file) && file.length > 0) {
-        if (file[0]) {
-          return file[0].location
-        }
-      }
-      return null
-    }
-
-    console.log(body)
-
-    body.imageCouple = getFileProcessed(files.imageCouple)
-    body.imageThumbnail = getFileProcessed(files.imageThumbnail)
-
     return this.invCardService.create(body, user)
   }
 
@@ -73,5 +58,26 @@ export class InvitationCardController {
     return this.invCardService.update(id, body)
   }
 
+  @NeedAuth()
+  @Put('/update-thumbnail/:id')
+  @UseInterceptors(FileFieldsInterceptor([
+    { name: 'imageThumbnail', maxCount: 1 },
+  ]))
+  async updateThumbnail(
+    @UploadedFiles(FileImageProcessMultiple) files: {
+      imageThumbnail: FileProcessed[],
+    },
+    @Param('id') id: string
+  ) {
+    const getFileProcessed = (file: FileProcessed[]) => {
+      if (Array.isArray(file) && file.length > 0) {
+        if (file[0]) {
+          return file[0].location
+        }
+      }
+      return null
+    }
 
+    this.invCardService.updateThumbnail(id, getFileProcessed(files.imageThumbnail))
+  }
 }

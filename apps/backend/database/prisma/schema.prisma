@@ -25,6 +25,8 @@ model User {
   tokenVerify TokenVerify?
   federatedCredential FederatedCredentials[]
   invitationCards InvitationCard[]
+  invitationCardGalleryLike InvitationCardGalleryLike[]
+  invitationCardRsvp InvitationCardRSVP[]
 }
 
 model AdminUser {
@@ -67,6 +69,8 @@ model FederatedCredentials {
   provider String
 }
 
+// =======================
+// 💎 Invitation Card area
 model InvitationCard {
   id String @id @default(uuid())
   alias String? @unique
@@ -78,29 +82,51 @@ model InvitationCard {
   date DateTime
   location String?
   locationCoord String?
-  imageCouple String?
   imageThumbnail String?
-  rsvpText String?
+  galleries InvitationCardGallery[]
+  rsvp InvitationCardRSVP[]
   createdAt DateTime @default(now())
-
-  feature InvitationCardFeatures?
-  guest InvitationCardGuest[]
 }
 
-model InvitationCardFeatures {
-  cardId String @unique
-  card InvitationCard @relation(fields: [cardId], references: [id])
-  enableRsvp Boolean @default(true)
-  enableOurstory Boolean @default(false)
-  enableFamily Boolean @default(false)
-}
-
-model InvitationCardGuest {
-  id Int @id @default(autoincrement())
+model InvitationCardGallery {
+  id String @id @default(uuid())
   cardId String
   card InvitationCard @relation(fields: [cardId], references: [id])
-  name String
-  status String
-  comment String?
+  
+  caption String
+  image String
+  totalLikes Int
+  likes InvitationCardGalleryLike[]
+
+  createdAt DateTime @default(now())
+  deleteAt DateTime
+}
+
+model InvitationCardGalleryLike {
+  id Int @id
+  userId String
+  user User @relation(fields: [userId], references: [id])
+  galleryId String
+  galleryCard InvitationCardGallery @relation(fields: [galleryId], references: [id])
   createdAt DateTime @default(now())
 }
+
+model InvitationCardRSVP {
+  id String @id @default(uuid())
+  cardId String
+  card InvitationCard @relation(fields: [cardId], references: [id])
+  userId String?
+  user User? @relation(fields: [userId], references: [id])
+  name String
+  gift Int?
+  status RSVPStatus
+  reason String
+  createdAt DateTime @default(now())
+}
+
+enum RSVPStatus {
+  attended
+  notAttended
+  maybe
+}
+
