@@ -2,7 +2,7 @@ import { Box, Button, Container, Flex, Grid, GridItem, Heading, Icon, Image, Tex
 import Link from "next/link"
 import Router from "next/router"
 import { FiPlus } from 'react-icons/fi'
-import { ButtonOpenInvitationCard } from "../../components/invitation-card/ButtonOpen"
+import { ButtonOpenInvitationCard } from "../../components/invitation-card/HelperComponent"
 import { imageUploadUrl } from "../../lib/file-helper/image-upload-url"
 import { useInvitationCardList } from "../../lib/useFetch/api/invitationcard-api"
 

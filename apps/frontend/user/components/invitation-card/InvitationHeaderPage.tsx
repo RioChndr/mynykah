@@ -1,9 +1,8 @@
-import { Button, Flex, Text } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { FiArrowUpRight } from "react-icons/fi";
 import { apiInvitationCardDetail } from "../../lib/useFetch/api/invitationcard-api";
 import { ButtonBack } from "../common/ButtonBack";
-import { ButtonOpenInvitationCard } from "./ButtonOpen";
+import { ButtonOpenInvitationCard } from "./HelperComponent";
 
 export function InvitationHeaderPage() {
   const router = useRouter()

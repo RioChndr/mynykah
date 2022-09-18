@@ -1,26 +1,18 @@
 import { Box, Container, Stack, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { imageUploadUrl } from "../../lib/file-helper/image-upload-url";
-import { useInvitationCardDetail } from "../../lib/useFetch/api/invitationcard-api";
+import { DataInvitationCard, useInvitationCardDetail } from "../../lib/useFetch/api/invitationcard-api";
 import { TextNameCouple } from "../../lib/utils/text-utils";
 import { ButtonBack } from "../common/ButtonBack";
 import { InvitationCardThumbnail } from "./CardThumbnail";
 
-export function InvitationContainer({ children: Children }) {
-  const router = useRouter()
-  const id = router.query.id as string
-  const fetch = useInvitationCardDetail(id)
-  if (fetch.isLoading) return (
-    <Text>
-      Loading ...
-    </Text>
-  )
+export interface InvitationContainerProps {
+  children: (props: any) => JSX.Element
+  data: DataInvitationCard,
+  isEditable?: boolean,
+}
 
-  if (!fetch.data) return (
-    <Text>
-      Terjadi kesalahan
-    </Text>
-  )
+export function InvitationContainer({ children: Children, isEditable, data }: InvitationContainerProps) {
 
   return (
     <Container marginBottom='12'>
@@ -29,10 +21,11 @@ export function InvitationContainer({ children: Children }) {
           <ButtonBack />
         </Box>
         <InvitationCardThumbnail
-          image={imageUploadUrl(fetch.data.imageThumbnail)}
-          title={TextNameCouple(fetch.data.nameMale, fetch.data.nameFemale)}
+          image={imageUploadUrl(data.imageThumbnail)}
+          title={TextNameCouple(data.nameMale, data.nameFemale)}
+          showEdit={isEditable}
         />
-        {Children(fetch.data)}
+        {Children(data)}
       </Stack>
     </Container>
   )

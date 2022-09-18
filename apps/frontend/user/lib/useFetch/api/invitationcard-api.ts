@@ -1,7 +1,8 @@
 import useSWR from 'swr';
-import { api } from '../api';
+import { api, apiSetContextSSR } from '../api';
 import { fetcher, SwrHooks } from "../fetcher";
 import { InvitationCard, InvitationCardGallery } from "@prisma/client";
+import { GetServerSidePropsContext } from 'next';
 
 export interface DataInvitationCard extends InvitationCard {
   galleries?: InvitationCardGallery[]
@@ -46,6 +47,43 @@ export function apiInvitationCardDetail(id: string) {
   )
 }
 
+export function apiInvitationCardDetailSSR(id: string) {
+  return api.get<DataInvitationCard>('/api/invitation-card/detail/' + id)
+}
+
 export function apiInvitationCardUpdate(id: string, data: any) {
   return api.put('/api/invitation-card/update/' + id, data)
+}
+
+export function apiInvitationCardIsOwner(id: string) {
+  return api.get('/api/invitation-card/is-owner/' + id)
+}
+
+export function apiInvitationCardIsOwnerSwr(id: string) {
+  return SwrHooks(useSWR('/api/invitation-card/is-owner/' + id))
+}
+
+export async function apiInvitationCardSSRProps(context: GetServerSidePropsContext, props: { throwIfNotOwner?: boolean } = {}) {
+  const id = context.query.id as string
+  apiSetContextSSR(context)
+
+  try {
+    if (props.throwIfNotOwner) {
+      await apiInvitationCardIsOwner(id)
+    }
+    const data = await apiInvitationCardDetailSSR(id)
+    return {
+      props: {
+        data: data.data,
+      }
+    }
+  } catch (err) {
+    console.log(err)
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/",
+      }
+    }
+  }
 }
