@@ -5,31 +5,38 @@ import { RoleType, ROLE_KEY } from 'src/decorators/Role.decorator';
 import { UserRepository } from 'src/database/repos/user.repository';
 import { UserWithAdminRole } from 'src/database/repos/type/user.type';
 import { Reflector } from '@nestjs/core';
+import { ALLOW_PASS_KEY } from '@backend/decorators/need-auth.decorator';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
     private userRepository?: UserRepository,
-  ) {}
+  ) { }
 
   async canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest();
     const token = request.headers?.authorization ?? null;
-    if (!token) return false;
-    if (token.split(' ').length < 2) return false;
+    if (!token) return this.notValidate(context);
+    if (token.split(' ').length < 2) return this.notValidate(context);
 
     const bearerToken = token.split(' ')[1];
 
     const user = await this.validateToken(bearerToken);
-    if (!user) return false;
+    if (!user) return this.notValidate(context);
 
     const isValidatedRole = await this.validateRole(user, context);
-    if (!isValidatedRole) return false;
+    if (!isValidatedRole) return this.notValidate(context);
 
     // Add data user at request
     request.user = user;
     return true;
+  }
+
+  notValidate(context: ExecutionContext) {
+    const allowPass = this.reflector.get<boolean>(ALLOW_PASS_KEY, context.getHandler());
+    if (allowPass) return true;
+    return false;
   }
 
   async validateToken(token: string): Promise<false | UserWithAdminRole> {

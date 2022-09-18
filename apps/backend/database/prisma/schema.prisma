@@ -123,6 +123,7 @@ model InvitationCardRSVP {
   gift Int?
   status RSVPStatus
   reason String?
+  person Int?
   createdAt DateTime @default(now())
 }
 

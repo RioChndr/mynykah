@@ -1,4 +1,4 @@
-import { applyDecorators, createParamDecorator, ExecutionContext, UseGuards } from '@nestjs/common';
+import { applyDecorators, createParamDecorator, ExecutionContext, SetMetadata, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { RoleType, Role } from './Role.decorator';
 import { AuthGuard } from '../api/auth/authrorization/authorization.guard';
@@ -8,10 +8,16 @@ import { AuthGuard } from '../api/auth/authrorization/authorization.guard';
  * @param role 
  * @returns 
  */
-export function NeedAuth(role?: RoleType) {
+export function NeedAuth(options?: {
+  role?: RoleType
+  allowPass?: boolean
+}) {
   const listDecorator = [ApiBearerAuth(), UseGuards(AuthGuard)];
-  if (role) {
-    listDecorator.unshift(Role(role));
+  if (options?.allowPass) {
+    listDecorator.unshift(AllowPass())
+  }
+  if (options?.role) {
+    listDecorator.unshift(Role(options.role));
   }
   return applyDecorators(...listDecorator);
 }
@@ -25,3 +31,8 @@ export const GetUser = createParamDecorator(
     return request.user;
   },
 );
+
+export function AllowPass() {
+  return SetMetadata(ALLOW_PASS_KEY, true)
+}
+export const ALLOW_PASS_KEY = 'allowPass';

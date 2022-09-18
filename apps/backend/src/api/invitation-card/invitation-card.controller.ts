@@ -75,4 +75,13 @@ export class InvitationCardController {
 
     return this.invCardService.updateThumbnail(id, getFileUrlProcessed(files.imageThumbnail))
   }
+
+  @NeedAuth()
+  @Get('/is-owner/:id')
+  async isTheOwner(
+    @Param('id') id: string,
+    @GetUser() user: User
+  ) {
+    return await this.invCardService.isTheOwnerWithError(id, user)
+  }
 }
