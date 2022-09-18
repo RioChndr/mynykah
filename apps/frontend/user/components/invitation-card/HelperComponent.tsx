@@ -3,7 +3,7 @@ import Link from "next/link";
 import { FiArrowUpRight } from "react-icons/fi";
 
 export function ButtonOpenInvitationCard({ id, ...rest }) {
-  const path = `/invitation/${id}`
+  const path = `/invitation/${id}/preview`
   return (
     <Link href={path} passHref>
       <Button as='a' rightIcon={<FiArrowUpRight />} {...rest}>

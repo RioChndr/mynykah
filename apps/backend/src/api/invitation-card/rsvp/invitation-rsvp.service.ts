@@ -66,7 +66,8 @@ export class InvitationrSVPService {
         status: true
       },
       _sum: {
-        person: true
+        person: true,
+        gift: true
       },
     })
   }

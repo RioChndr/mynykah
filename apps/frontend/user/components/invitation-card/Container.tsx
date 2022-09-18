@@ -13,7 +13,6 @@ export interface InvitationContainerProps {
 }
 
 export function InvitationContainer({ children: Children, isEditable, data }: InvitationContainerProps) {
-
   return (
     <Container marginBottom='12'>
       <Stack spacing='6'>

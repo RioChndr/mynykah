@@ -21,3 +21,9 @@ export function DateOnlyLocale(date: string | Date): string {
     return date + "";
   }
 }
+
+export function CurrencyID(number: number | string, defaultVal?: any): string {
+  if (!number) return defaultVal || "Rp 0"
+
+  return Number(number).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })
+}
