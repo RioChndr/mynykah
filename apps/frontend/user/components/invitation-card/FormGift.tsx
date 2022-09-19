@@ -19,7 +19,7 @@ export function InvitationFormGift({ value, onChange }) {
     <Stack>
       <Grid templateColumns='repeat(3, 1fr)' templateRows='1fr 1fr' gap='3'>
         {giftList.map((v, i) => (
-          <Center>
+          <Center key={i}>
             <Button
               colorScheme={value === v.value ? null : 'gray'}
               variant={value === v.value ? 'solid' : 'outline'}

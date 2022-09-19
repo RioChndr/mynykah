@@ -24,7 +24,7 @@ export function SummaryRsvp({ idCard, isPreview }) {
 
   return (
     <Heading fontSize='md' textAlign='center'>
-      {totalGuest} Orang lain menghadiri undangan ini. &nbsp;
+      {totalGuest} menghadiri undangan ini. &nbsp;
       {isPreview && <Link href={urlRsvp}>
         <LinkHref as='a'>
           Lihat detail disini

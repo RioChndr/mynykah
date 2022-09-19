@@ -1,9 +1,11 @@
 import { Box, Button, Container, Flex, Heading, Image, Input, Stack, Text, useToast } from "@chakra-ui/react"
 import { ButtonBack } from "apps/frontend/user/components/common/ButtonBack"
+import { InvitationHeaderPage } from "apps/frontend/user/components/invitation-card/InvitationHeaderPage"
 import { imageUploadUrl } from "apps/frontend/user/lib/file-helper/image-upload-url"
 import { apiInvitationCardDetail, apiInvitationCardUpdate, apiInvitationCardUpdateThumbnail } from "apps/frontend/user/lib/useFetch/api/invitationcard-api"
 import { useRouter } from "next/router"
 import { useState } from "react"
+import { urlPageInvitationDetail } from "../detail"
 
 export function InviteCardEditThumbnail() {
   const router = useRouter()
@@ -42,9 +44,7 @@ export function InviteCardEditThumbnail() {
 
   return (
     <Container>
-      <Box>
-        <ButtonBack></ButtonBack>
-      </Box>
+      <InvitationHeaderPage backTo={urlPageInvitationDetail(id)}></InvitationHeaderPage>
       <Stack mt='3'>
         <Heading size='md'>
           Edit Thumbnail Undangan

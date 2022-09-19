@@ -17,17 +17,19 @@ export function InviteCardDetail() {
     editInfo: `/dashboard/invite-card/${id}/edit/info`,
     editRsvp: `/dashboard/invite-card/${id}/edit/rsvp`,
     editThumbnail: `/dashboard/invite-card/${id}/edit/thumbnail`,
+    editGallery: `/dashboard/invite-card/${id}/edit/gallery`
   }
 
   return (
     <Container display='flex' flexDirection='column' gap='3'>
-      <InvitationHeaderPage />
+      <InvitationHeaderPage backTo={'/dashboard'} />
       <SectionStatistic />
       <Flex direction='column' gap='3'>
         <HeadingSection title="Fitur undangan" description="Anda bisa pilih Fitur undangan sesuai keinginan anda" />
         <Flex direction='column' gap='3' width={{ base: 'full', md: '50%' }}>
           <FeatureControl name="Halaman Undangan" editPage={pageInviteCard.editInfo} />
           <FeatureControl name="Thumbnail Undangan" editPage={pageInviteCard.editThumbnail} />
+          <FeatureControl name="Galeri" editPage={pageInviteCard.editGallery} />
           <FeatureControl name="RSVP" editPage={pageInviteCard.editRsvp} />
         </Flex>
       </Flex>
@@ -102,4 +104,8 @@ function FeatureControl(props: { name: string, editPage?: string, comingSoon?: b
       </Flex>
     </Link>
   )
+}
+
+export function urlPageInvitationDetail(id: string) {
+  return `/dashboard/invite-card/${id}/detail`
 }

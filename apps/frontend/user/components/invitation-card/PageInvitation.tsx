@@ -1,11 +1,16 @@
 import { Box, Button, Container, Flex, Heading, HStack, Stack, Text } from "@chakra-ui/react"
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { imageUploadUrl } from "../../lib/file-helper/image-upload-url";
 import { DataInvitationCard } from "../../lib/useFetch/api/invitationcard-api";
-import { DateOnlyLocale } from "../../lib/utils/text-utils";
+import { DateOnlyLocale, TextNameCouple } from "../../lib/utils/text-utils";
 import { CardGalleryCuteList, CardGalleryCuteProps } from "./CardGallery";
 import { InvitationContainer } from "./Container";
 import { SummaryRsvp } from "./RSVPSummary";
+import { urlPageInvitationGalleryEdit } from "../../pages/dashboard/invite-card/[id]/edit/gallery";
+import { apiInvitationGalleryLikesToggle } from "../../lib/useFetch/api/invitation-gallery-api";
+import { useAuth } from "../../lib/auth/useAuth";
+import { configUseAuth } from "../../lib/auth/config";
 
 function TitleSection({ text, }) {
   return (
@@ -22,39 +27,32 @@ export interface PageInviationProps {
 }
 
 export function PageInvitationLayout(props: PageInviationProps) {
-  const listGallery: CardGalleryCuteProps[] = [
-    {
-      title: "Foto kami dong",
-      description: "lorem ipsum dolor sit amet",
-      src: "https://picsum.photos/500/600",
-    },
-    {
-      title: "Foto kami dong",
-      description: "lorem ipsum dolor sit amet",
-      src: "https://picsum.photos/500/600",
-    },
-    {
-      title: "Foto kami dong",
-      description: "lorem ipsum dolor sit amet",
-      src: "https://picsum.photos/500/600",
-    },
-    {
-      title: "Foto kami dong",
-      description: "lorem ipsum dolor sit amet",
-      src: "https://picsum.photos/500/600",
-    },
-    {
-      title: "Video kami bersama",
-      description: "lorem ipsum dolor sit amet",
-      src: "https://samplelib.com/lib/preview/mp4/sample-5s.mp4",
-      type: 'video',
-    }
-  ]
+  let listGallery: CardGalleryCuteProps[] = []
+  const router = useRouter()
+  const authContext = useAuth()
+  const idCard = router.query.id as string
 
-  function TitleSectionInformation({ text }) {
-    const router = useRouter()
-    const idCard = router.query.id
-    const urlEdit = `/dashboard/invite-card/${idCard}/edit/info`
+  if (props?.data?.galleries) {
+    listGallery = props.data.galleries.map((item, i) => {
+      return {
+        id: item.id,
+        src: imageUploadUrl(item.image),
+        title: item.caption,
+        totalHeart: item.totalLikes,
+        onGiveHeart(isAdd?: boolean) {
+          if (!authContext.user) {
+            router.push(configUseAuth.loginPage)
+            return;
+          }
+          return apiInvitationGalleryLikesToggle(item.id)
+        },
+      }
+    })
+  }
+
+
+  function TitleSectionInformation({ text, edit = null }) {
+    const urlEdit = edit || `/dashboard/invite-card/${idCard}/edit/info`
     return (
       <Flex justify='space-between'>
         <TitleSection text={text} />
@@ -74,30 +72,30 @@ export function PageInvitationLayout(props: PageInviationProps) {
       {(data: DataInvitationCard) => (
         <>
           <Stack>
-            <TitleSectionInformation text='💖 Cerita Kita' />
-            <Text>
+            <TitleSectionInformation text={`💖 Cerita ${TextNameCouple(data.nameMale, data.nameFemale)}`} />
+            <Text fontSize='xl' as='i'>
               {data.information}
             </Text>
           </Stack>
           <Stack>
-            <TitleSection text='📷 Galeri' />
+            <TitleSectionInformation text='📷 Galeri' edit={urlPageInvitationGalleryEdit(idCard)} />
             <CardGalleryCuteList items={listGallery} />
           </Stack>
           <Stack>
             <TitleSectionInformation text='📅 Tanggal' />
-            <Text>
+            <Text fontSize='xl'>
               {DateOnlyLocale(data.date)}
             </Text>
           </Stack>
           <Stack>
             <TitleSectionInformation text='📍 Lokasi' />
-            <Text>
+            <Text fontSize='xl'>
               {data.location}
             </Text>
           </Stack>
           <Stack>
             <TitleSectionInformation text='⌛ Agenda Acara' />
-            <Text style={{ whiteSpace: 'pre-wrap' }}>
+            <Text fontSize='xl' style={{ whiteSpace: 'pre-wrap' }}>
               {data.agenda}
             </Text>
           </Stack>

@@ -4,7 +4,7 @@ import { apiInvitationCardDetail } from "../../lib/useFetch/api/invitationcard-a
 import { ButtonBack } from "../common/ButtonBack";
 import { ButtonOpenInvitationCard } from "./HelperComponent";
 
-export function InvitationHeaderPage() {
+export function InvitationHeaderPage({ backTo = null }) {
   const router = useRouter()
   const id = router.query.id as string
   const { data } = apiInvitationCardDetail(id)
@@ -13,7 +13,7 @@ export function InvitationHeaderPage() {
     <>
       <Flex justifyContent='space-between'>
         <Flex gap='3' alignItems='center'>
-          <ButtonBack></ButtonBack>
+          <ButtonBack to={backTo}></ButtonBack>
           <Text fontSize='lg'>
             {data ? `${data.nameMale} dan ${data.nameFemale}` : ''}
           </Text>

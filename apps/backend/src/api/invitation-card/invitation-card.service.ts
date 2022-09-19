@@ -22,10 +22,14 @@ export class InvitationCardService {
     return this.db.invitationCard.findFirst({
       where: {
         id,
-        deleteAt: null
+        deleteAt: null,
       },
-      include: {
-        galleries: include.galleries
+      include: include.galleries && {
+        galleries: {
+          where: {
+            deleteAt: null
+          }
+        }
       },
     })
   }

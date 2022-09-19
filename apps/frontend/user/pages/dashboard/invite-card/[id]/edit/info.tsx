@@ -1,20 +1,20 @@
 import { Box, Container, Text } from "@chakra-ui/react"
 import { ButtonBack } from "apps/frontend/user/components/common/ButtonBack"
 import { InvitationForm } from "apps/frontend/user/components/invitation-card/InvitationForm"
+import { InvitationHeaderPage } from "apps/frontend/user/components/invitation-card/InvitationHeaderPage"
 import { apiInvitationCardDetail, apiInvitationCardUpdate } from "apps/frontend/user/lib/useFetch/api/invitationcard-api"
 import _ from "lodash"
 import Router, { useRouter } from "next/router"
 import { useState } from "react"
+import { urlPageInvitationDetail } from "../detail"
 
 export function InviteCardEditInfo() {
   const router = useRouter()
-  const id = router.query.id
+  const id = router.query.id as string
 
   return (
     <Container display='flex' flexDir='column' gap="6">
-      <Box>
-        <ButtonBack></ButtonBack>
-      </Box>
+      <InvitationHeaderPage backTo={urlPageInvitationDetail(id)}></InvitationHeaderPage>
 
       <SectionEdit id={id} />
     </Container>

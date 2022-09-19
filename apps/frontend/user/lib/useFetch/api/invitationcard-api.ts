@@ -72,6 +72,15 @@ export async function apiInvitationCardSSRProps(context: GetServerSidePropsConte
       await apiInvitationCardIsOwner(id)
     }
     const data = await apiInvitationCardDetailSSR(id)
+    console.log(data.data)
+    if (!data.data) {
+      return {
+        redirect: {
+          permanent: false,
+          destination: `/`,
+        }
+      }
+    }
     return {
       props: {
         data: data.data,

@@ -8,11 +8,15 @@ import { CurrencyID, DateOnlyLocale } from "apps/frontend/user/lib/utils/text-ut
 import { useRouter } from "next/router"
 import { useMemo, useState } from "react"
 import { BsFillGiftFill, BsFillPersonCheckFill, BsFillPersonXFill } from "react-icons/bs"
+import { urlPageInvitationDetail } from "../detail"
 
 export function InvitationCardEditRsvp() {
+  const router = useRouter()
+  const id = router.query.id as string
+
   return (
     <Container display='flex' gap='6' flexDirection='column' mb='12'>
-      <InvitationHeaderPage />
+      <InvitationHeaderPage backTo={urlPageInvitationDetail(id)} />
       <HeadingSection
         title="RSVP"
         description="RSVP dicantumkan untuk memberitahu tamu bahwa mereka perlu melakukan konfirmasi sebelum menghadiri acaranya"

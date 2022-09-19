@@ -38,7 +38,7 @@ export class InvitationCardController {
   getOne(
     @Param('id') id: string
   ) {
-    return this.invCardService.getOne(id)
+    return this.invCardService.getOne(id, { galleries: true })
   }
 
   @NeedAuth()

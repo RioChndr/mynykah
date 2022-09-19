@@ -1,5 +1,7 @@
 export function TextNameCouple(...names: string[]) {
+  if (!names || names.length === 0) return ''
   return names.map((name) => {
+    if (!name) return ''
     return name.charAt(0).toUpperCase() + name.slice(1)
   }).join(" dan ")
 }
