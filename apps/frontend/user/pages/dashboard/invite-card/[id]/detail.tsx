@@ -1,4 +1,4 @@
-import { Box, Container, Flex, Grid, GridItem, Icon, Stat, StatLabel, StatNumber } from "@chakra-ui/react";
+import { Box, Container, Flex, Grid, GridItem, Icon, Stat, StatLabel, StatNumber, Text } from "@chakra-ui/react";
 import { CardStatistic } from "apps/frontend/user/components/common/CardStatistic";
 import { HeadingSection } from "apps/frontend/user/components/common/HeadingSection";
 import { InvitationHeaderPage } from "apps/frontend/user/components/invitation-card/InvitationHeaderPage";
@@ -16,6 +16,7 @@ export function InviteCardDetail() {
   const pageInviteCard = {
     editInfo: `/dashboard/invite-card/${id}/edit/info`,
     editRsvp: `/dashboard/invite-card/${id}/edit/rsvp`,
+    editThumbnail: `/dashboard/invite-card/${id}/edit/thumbnail`,
   }
 
   return (
@@ -25,7 +26,8 @@ export function InviteCardDetail() {
       <Flex direction='column' gap='3'>
         <HeadingSection title="Fitur undangan" description="Anda bisa pilih Fitur undangan sesuai keinginan anda" />
         <Flex direction='column' gap='3' width={{ base: 'full', md: '50%' }}>
-          <FeatureControl name="Fitur Halaman Undangan" editPage={pageInviteCard.editInfo} />
+          <FeatureControl name="Halaman Undangan" editPage={pageInviteCard.editInfo} />
+          <FeatureControl name="Thumbnail Undangan" editPage={pageInviteCard.editThumbnail} />
           <FeatureControl name="RSVP" editPage={pageInviteCard.editRsvp} />
         </Flex>
       </Flex>
@@ -90,14 +92,14 @@ const ComingSoon = () => {
 
 function FeatureControl(props: { name: string, editPage?: string, comingSoon?: boolean }) {
   return (
-    <Flex justifyContent='space-between' alignItems='center'>
-      <div>
-        {props.name}
-        {props.comingSoon && <ComingSoon />}
-      </div>
-      <Link href={props.editPage || ""}>
+    <Link href={props.editPage || ""} passHref>
+      <Flex as='a' justifyContent='space-between' alignItems='center'>
+        <Text fontWeight={'bold'}>
+          {props.name}
+          {props.comingSoon && <ComingSoon />}
+        </Text>
         <Icon as={BsPencilSquare} color='gray' cursor='pointer' />
-      </Link>
-    </Flex>
+      </Flex>
+    </Link>
   )
 }

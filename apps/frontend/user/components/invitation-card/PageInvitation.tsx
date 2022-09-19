@@ -1,11 +1,13 @@
-import { Box, Button, Container, Flex, Heading, Stack, Text } from "@chakra-ui/react"
+import { Box, Button, Container, Flex, Heading, HStack, Stack, Text } from "@chakra-ui/react"
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { DataInvitationCard } from "../../lib/useFetch/api/invitationcard-api";
 import { DateOnlyLocale } from "../../lib/utils/text-utils";
 import { CardGalleryCuteList, CardGalleryCuteProps } from "./CardGallery";
 import { InvitationContainer } from "./Container";
+import { SummaryRsvp } from "./RSVPSummary";
 
-function TitleSection({ text }) {
+function TitleSection({ text, }) {
   return (
     <Heading size='md'>
       {text}
@@ -20,7 +22,7 @@ export interface PageInviationProps {
 }
 
 export function PageInvitationLayout(props: PageInviationProps) {
-  const list: CardGalleryCuteProps[] = [
+  const listGallery: CardGalleryCuteProps[] = [
     {
       title: "Foto kami dong",
       description: "lorem ipsum dolor sit amet",
@@ -49,45 +51,59 @@ export function PageInvitationLayout(props: PageInviationProps) {
     }
   ]
 
+  function TitleSectionInformation({ text }) {
+    const router = useRouter()
+    const idCard = router.query.id
+    const urlEdit = `/dashboard/invite-card/${idCard}/edit/info`
+    return (
+      <Flex justify='space-between'>
+        <TitleSection text={text} />
+        {props.isEditable && (
+          <Link href={urlEdit} passHref>
+            <Button as='a' variant={'outline'} size='sm'>
+              Edit
+            </Button>
+          </Link>
+        )}
+      </Flex>
+    )
+  }
+
   return (
-    <InvitationContainer isEditable={props.isEditable} data={props.data}>
+    <InvitationContainer data={props.data}>
       {(data: DataInvitationCard) => (
         <>
           <Stack>
-            <TitleSection text='📝 Informations' />
+            <TitleSectionInformation text='💖 Cerita Kita' />
             <Text>
               {data.information}
             </Text>
           </Stack>
           <Stack>
             <TitleSection text='📷 Galeri' />
-            <CardGalleryCuteList items={list} />
+            <CardGalleryCuteList items={listGallery} />
           </Stack>
           <Stack>
-            <TitleSection text='📅 Date & Time' />
+            <TitleSectionInformation text='📅 Tanggal' />
             <Text>
               {DateOnlyLocale(data.date)}
             </Text>
           </Stack>
           <Stack>
-            <TitleSection text='📍 Locations' />
+            <TitleSectionInformation text='📍 Lokasi' />
             <Text>
               {data.location}
             </Text>
           </Stack>
           <Stack>
-            <TitleSection text='⌛ Rundown Acara' />
-            <Text>
-              Pagi : Akad <br />
-              Siang : dakad <br />
-              Malam : dangdut <br />
+            <TitleSectionInformation text='⌛ Agenda Acara' />
+            <Text style={{ whiteSpace: 'pre-wrap' }}>
+              {data.agenda}
             </Text>
           </Stack>
-          {props.rsvp && <Stack>
-            <Heading fontSize='md' textAlign='center'>
-              20 Orang lain menghadiri undangan ini
-            </Heading>
-            <Flex justifyContent='center' gap='3'>
+          <Stack>
+            <SummaryRsvp idCard={data.id} isPreview={props.isEditable} />
+            {props.rsvp && <Flex justifyContent='center' gap='3'>
               <Link href={`/invitation/${data.id}/not-join`} passHref>
                 <Button colorScheme="gray" variant='outline'>
                   Saya Tidak Hadir
@@ -99,8 +115,8 @@ export function PageInvitationLayout(props: PageInviationProps) {
                   Saya Hadir
                 </Button>
               </Link>
-            </Flex>
-          </Stack>}
+            </Flex>}
+          </Stack>
         </>
       )}
     </InvitationContainer>

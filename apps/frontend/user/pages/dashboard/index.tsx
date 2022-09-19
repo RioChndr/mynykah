@@ -5,6 +5,7 @@ import { FiPlus } from 'react-icons/fi'
 import { ButtonOpenInvitationCard } from "../../components/invitation-card/HelperComponent"
 import { imageUploadUrl } from "../../lib/file-helper/image-upload-url"
 import { useInvitationCardList } from "../../lib/useFetch/api/invitationcard-api"
+import { DateOnlyLocale } from "../../lib/utils/text-utils"
 
 /**
  * @todo Create : 
@@ -30,7 +31,7 @@ function CardInvitation({
       <Box p='6'>
         <Heading size='lg'>{name}</Heading>
         <Text size='xs'>
-          {new Date(date).toLocaleString()}
+          {DateOnlyLocale(date)}
         </Text>
         <Text my='3'>
           {description}
@@ -92,8 +93,9 @@ export function DashboardIndex() {
         <CardInvitation
           key={index}
           name={`${v.nameMale} dan ${v.nameFemale}`}
-          date={v.date}
+          date={v.date.toString()}
           image={v.imageThumbnail}
+          description={v.information}
           id={v.id}
         />
       )

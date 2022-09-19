@@ -41,6 +41,9 @@ function StatisticRSVP() {
     if (fetchTotal.isLoading) return "..."
     if (fetchTotal.isError) return "0"
     const attendedData = fetchTotal.data.find((v) => v.status === "attended")
+    if (!attendedData?._sum.person) {
+      return "0 Orang"
+    }
     return attendedData?._sum.person + " Orang"
   }, [fetchTotal.data])
 
@@ -58,6 +61,9 @@ function StatisticRSVP() {
     if (fetchTotal.isLoading) return "..."
     if (fetchTotal.isError) return "0"
     const attendedData = fetchTotal.data.find((v) => v.status === "notAttended")
+    if (!attendedData?._count.status) {
+      return "0 Orang"
+    }
     return attendedData?._count.status + " Orang"
   }, [fetchTotal.data])
 

@@ -11,6 +11,8 @@ export class InvitationCardCreateDTO {
   location?: string
   @ApiProperty({ required: false })
   locationCoord?: string
+  @ApiProperty({ required: false })
+  agenda?: string
   imageThumbnail?: string
   information?: string
 }

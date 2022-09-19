@@ -84,6 +84,7 @@ model InvitationCard {
   locationCoord String?
   imageThumbnail String?
   information String?
+  agenda String? @db.Text
   galleries InvitationCardGallery[]
   rsvp InvitationCardRSVP[]
   createdAt DateTime @default(now())

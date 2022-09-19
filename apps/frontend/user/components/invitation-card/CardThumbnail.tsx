@@ -5,7 +5,6 @@ export interface CardThumbnailProps {
   title: string
   image: string
   info?: string
-  showEdit?: boolean
 }
 
 export function InvitationCardThumbnail(props: CardThumbnailProps) {
@@ -21,11 +20,6 @@ export function InvitationCardThumbnail(props: CardThumbnailProps) {
               {props.title}
             </Heading>
           </Stack>
-          {props.showEdit && (
-            <Button variant={'outline'}>
-              Edit
-            </Button>
-          )}
         </Flex>
       </GridItem>
       <GridItem gridColumn='1 / -1' gridRow='1 / -1' zIndex='-1' position='relative' _before={{ ...ShadowBgImage, zIndex: '1' }}>

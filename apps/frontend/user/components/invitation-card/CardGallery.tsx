@@ -46,8 +46,8 @@ export const CardGalleryCuteList = (props: { items: CardGalleryCuteProps[] }) =>
       </Flex>
       <Flex ref={containerList} gap='3' flexWrap='nowrap' overflow='auto' mt='3'>
         {
-          props.items.map((prop) => (
-            <InvitationCardGalleryCute {...prop} />
+          props.items.map((prop, i) => (
+            <InvitationCardGalleryCute key={i} {...prop} />
           ))
         }
       </Flex>

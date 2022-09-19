@@ -82,8 +82,12 @@ export async function apiInvitationCardSSRProps(context: GetServerSidePropsConte
     return {
       redirect: {
         permanent: false,
-        destination: "/",
+        destination: `/invitation/${id}`,
       }
     }
   }
+}
+
+export function apiInvitationCardUpdateThumbnail(id: string, data: FormData) {
+  return api.put('/api/invitation-card/update-thumbnail/' + id, data)
 }

@@ -44,15 +44,16 @@ export class InvitationCardService {
         },
         deleteAt: null
       },
+      orderBy: {
+        createdAt: 'desc'
+      }
     })
   }
 
   async update(id: string, payloadUpdate: Prisma.InvitationCardUpdateInput) {
-    const data = await this.getOneWithError(id)
-    Object.assign(data, payloadUpdate)
     return this.db.invitationCard.update({
       where: { id },
-      data: data as any,
+      data: payloadUpdate,
     })
   }
 
