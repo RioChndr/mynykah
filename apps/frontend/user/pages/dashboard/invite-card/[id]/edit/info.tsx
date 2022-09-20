@@ -1,21 +1,20 @@
-import { Box, Button, Center, Container, Flex, Heading, Text } from "@chakra-ui/react"
+import { Box, Container, Text } from "@chakra-ui/react"
 import { ButtonBack } from "apps/frontend/user/components/common/ButtonBack"
-import { QuickAlert } from "apps/frontend/user/components/common/QuickAlert"
-import { FieldForm } from "apps/frontend/user/components/form/field"
+import { InvitationForm } from "apps/frontend/user/components/invitation-card/InvitationForm"
+import { InvitationHeaderPage } from "apps/frontend/user/components/invitation-card/InvitationHeaderPage"
 import { apiInvitationCardDetail, apiInvitationCardUpdate } from "apps/frontend/user/lib/useFetch/api/invitationcard-api"
-import { Form, Formik } from "formik"
+import _ from "lodash"
 import Router, { useRouter } from "next/router"
 import { useState } from "react"
+import { urlPageInvitationDetail } from "../detail"
 
 export function InviteCardEditInfo() {
   const router = useRouter()
-  const id = router.query.id
+  const id = router.query.id as string
 
   return (
     <Container display='flex' flexDir='column' gap="6">
-      <Box>
-        <ButtonBack></ButtonBack>
-      </Box>
+      <InvitationHeaderPage backTo={urlPageInvitationDetail(id)}></InvitationHeaderPage>
 
       <SectionEdit id={id} />
     </Container>
@@ -23,7 +22,7 @@ export function InviteCardEditInfo() {
 }
 
 function SectionEdit({ id }) {
-  const { data, isError, isLoading } = apiInvitationCardDetail(id)
+  const { data, isError: errorFetch, isLoading: loadingFetch } = apiInvitationCardDetail(id)
 
   const initialValues = data || {
     nameMale: '',
@@ -33,48 +32,37 @@ function SectionEdit({ id }) {
     locationCoord: '',
   }
 
-
-  const [onSaving, setOnSaving] = useState(false)
-  const [onSavingError, setOnSavingError] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
 
   const onSubmit = async (values) => {
-    setOnSaving(true)
+    setIsLoading(true)
     try {
-      await apiInvitationCardUpdate(id, values)
+      const data = _.omit(values, [
+        'galleries',
+        'id',
+        'imageThumbnail'
+      ])
+      console.log(data)
+      await apiInvitationCardUpdate(id, data)
       Router.replace('/dashboard/invite-card/' + id + "/detail")
     } catch (err) {
-      setOnSavingError(true)
+      console.log(err)
     }
-    setOnSaving(false)
+    setIsLoading(false)
   }
 
-  if (isLoading) return <Text>Loading ...</Text>
-  if (isError) {
+  if (loadingFetch) return <Text>Loading ...</Text>
+  if (errorFetch) {
     return <Text textColor='red'>Failed fetch data</Text>
   }
   return (
-    <Formik onSubmit={onSubmit} initialValues={initialValues} enableReinitialize>
-      <Form>
-        <Flex direction='column' gap='3'>
-          <Heading size='md'>
-            Edit undangan
-          </Heading>
-          <Text>
-            Kabarkan dimana dan kapan acara ini dimulai
-          </Text>
-          <FieldForm name="nameMale" label="Nama pasangan Laki-laki" isRequired />
-          <FieldForm name="nameFemale" label="Nama pasangan Perempuan" isRequired />
-          <FieldForm name="date" label="Tanggal menikah" type='date' isRequired />
-          <FieldForm name="location" label="Lokasi" isRequired />
-        </Flex>
-        <Center mt='3'>
-          {onSavingError && <QuickAlert status='error'>Gagal menyimpan data</QuickAlert>}
-          <Button type='submit' isLoading={onSaving}>
-            Simpan
-          </Button>
-        </Center>
-      </Form>
-    </Formik>
+    <InvitationForm
+      loading={isLoading}
+      onSubmit={onSubmit}
+      data={initialValues}
+      title={'Edit invitation'}
+      hideFile={true}
+    />
   )
 }
 

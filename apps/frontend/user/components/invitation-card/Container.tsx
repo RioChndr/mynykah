@@ -1,15 +1,23 @@
 import { Container, Stack } from "@chakra-ui/react";
+import { imageUploadUrl } from "../../lib/file-helper/image-upload-url";
+import { DataInvitationCard } from "../../lib/useFetch/api/invitationcard-api";
+import { TextNameCouple } from "../../lib/utils/text-utils";
 import { InvitationCardThumbnail } from "./CardThumbnail";
 
-export function InvitationContainer({ children }) {
+export interface InvitationContainerProps {
+  children: (props: any) => JSX.Element
+  data: DataInvitationCard,
+}
+
+export function InvitationContainer({ children: Children, data }: InvitationContainerProps) {
   return (
     <Container marginBottom='12'>
       <Stack spacing='6'>
         <InvitationCardThumbnail
-          image="https://picsum.photos/300/260"
-          title="Rio Chandra dan Nabilla Mauludina mahmud"
+          image={imageUploadUrl(data.imageThumbnail)}
+          title={TextNameCouple(data.nameMale, data.nameFemale)}
         />
-        {children}
+        {Children(data)}
       </Stack>
     </Container>
   )

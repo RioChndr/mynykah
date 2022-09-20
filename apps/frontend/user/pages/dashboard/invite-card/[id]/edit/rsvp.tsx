@@ -1,27 +1,27 @@
-import { Button, Container, Flex, Table, TableCaption, TableContainer, Tbody, Td, Textarea, Th, Thead, Tr } from "@chakra-ui/react"
+import { Checkbox, Container, Flex, Grid, GridItem, HStack, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react"
+import { CardStatistic } from "apps/frontend/user/components/common/CardStatistic"
 import { HeadingSection } from "apps/frontend/user/components/common/HeadingSection"
+import { PaginationControl, usePaginationControl } from "apps/frontend/user/components/common/PaginationControl"
 import { InvitationHeaderPage } from "apps/frontend/user/components/invitation-card/InvitationHeaderPage"
+import { apiRsvpList, apiRsvpTotal } from "apps/frontend/user/lib/useFetch/api/invitation-rsvp-api"
+import { CurrencyID, DateOnlyLocale } from "apps/frontend/user/lib/utils/text-utils"
+import { useRouter } from "next/router"
+import { useMemo, useState } from "react"
+import { BsFillGiftFill, BsFillPersonCheckFill, BsFillPersonXFill } from "react-icons/bs"
+import { urlPageInvitationDetail } from "../detail"
 
 export function InvitationCardEditRsvp() {
+  const router = useRouter()
+  const id = router.query.id as string
+
   return (
-    <Container display='flex' gap='6' flexDirection='column'>
-      <InvitationHeaderPage name="Undangan Rio chandra dan nabilla" />
+    <Container display='flex' gap='6' flexDirection='column' mb='12'>
+      <InvitationHeaderPage backTo={urlPageInvitationDetail(id)} />
       <HeadingSection
         title="RSVP"
         description="RSVP dicantumkan untuk memberitahu tamu bahwa mereka perlu melakukan konfirmasi sebelum menghadiri acaranya"
-        switchShow
       />
-      <Flex direction='column' gap='3'>
-        <HeadingSection
-          title="Edit pesan"
-          description="RSVP dicantumkan untuk memberitahu tamu bahwa mereka perlu melakukan konfirmasi sebelum menghadiri acaranya"
-        >
-          <Button size="sm">
-            Simpan
-          </Button>
-        </HeadingSection>
-        <Textarea placeholder="Pesan harap dijawab"></Textarea>
-      </Flex>
+      <StatisticRSVP />
       <Flex direction='column' gap='3'>
         <HeadingSection
           title="Orang yang menghadiri undangan"
@@ -36,37 +36,143 @@ export function InvitationCardEditRsvp() {
 
 export default InvitationCardEditRsvp
 
-function TableGuest(){
-  const data = [
-    ['Segun Adebayo', '2022-02-01'],
-    ['Mark Chandler', '2022-02-01'],
-    ['Lazar Nikolov', '2022-02-01'],
-    ['Javier Alaves', '2022-02-01'],
-  ]
+function StatisticRSVP() {
+  const router = useRouter()
+  const id = router.query.id as string
+  const fetchTotal = apiRsvpTotal(id)
+
+  const totalGuest = useMemo(() => {
+    if (fetchTotal.isLoading) return "..."
+    if (fetchTotal.isError) return "0"
+    const attendedData = fetchTotal.data.find((v) => v.status === "attended")
+    if (!attendedData?._sum.person) {
+      return "0 Orang"
+    }
+    return attendedData?._sum.person + " Orang"
+  }, [fetchTotal.data])
+
+  const totalGift = useMemo(() => {
+    if (fetchTotal.isLoading) return "..."
+    if (fetchTotal.isError) return "0"
+    let total = 0
+    fetchTotal.data.forEach((v) => {
+      total += v._sum.gift
+    })
+    return total.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })
+  }, [fetchTotal.data])
+
+  const totalNotAttended = useMemo(() => {
+    if (fetchTotal.isLoading) return "..."
+    if (fetchTotal.isError) return "0"
+    const attendedData = fetchTotal.data.find((v) => v.status === "notAttended")
+    if (!attendedData?._count.status) {
+      return "0 Orang"
+    }
+    return attendedData?._count.status + " Orang"
+  }, [fetchTotal.data])
+
+  return (
+    <Grid templateColumns={{ base: '1fr 1fr', md: 'repeat(3, 1fr)', lg: 'repeat(4, 1fr)' }} gap='6'>
+      <GridItem>
+        <CardStatistic
+          name="Jumlah tamu"
+          number={totalGuest}
+          icon={<BsFillPersonCheckFill size='24' />}
+        />
+      </GridItem>
+      <GridItem>
+        <CardStatistic
+          name="Jumlah Gift"
+          number={totalGift}
+          icon={<BsFillGiftFill size="20" />}
+        />
+      </GridItem>
+      <GridItem>
+        <CardStatistic
+          name="Jumlah Tidak hadir"
+          number={totalNotAttended}
+          icon={<BsFillPersonXFill size="24" />}
+        />
+      </GridItem>
+    </Grid>
+  )
+}
+
+function TableGuest() {
+  const router = useRouter()
+  const id = router.query.id as string
+  const paginate = usePaginationControl()
+  const [selectAll, setSelectAll] = useState(false)
+
+  const fetchList = apiRsvpList(id, {
+    limit: paginate.limit,
+    page: paginate.page,
+    ...!selectAll && {
+      status: "attended"
+    }
+  })
+
+  const listStatus = new Map()
+  listStatus.set("attended", "Hadir")
+  listStatus.set("notAttended", "Tidak Hadir")
 
   return (
     <TableContainer>
+      <HStack m='3'>
+        <Checkbox isChecked={selectAll} onChange={(e) => setSelectAll(!selectAll)}>Tampilkan semua</Checkbox>
+      </HStack>
       <Table variant='simple'>
-        <TableCaption>Total 529 Orang Menghadiri undangan</TableCaption>
+        <TableCaption>Total {fetchList.data?.total || 0} Orang Konfirmasi</TableCaption>
         <Thead bg='primary'>
           <Tr>
-            <Th textColor='white'>
-              Nama
-            </Th>
-            <Th textColor='white'>
-              Tanggal
-            </Th>
+            {
+              [
+                "Nama",
+                "Status",
+                "Tamu",
+                "Gift",
+                "Tanggal Konfirmasi",
+              ].map((v, i) => (
+                <Th key={i} textColor='white'>{v}</Th>
+              ))
+            }
           </Tr>
         </Thead>
-        <Tbody>
-          {data.map((v) => (
-            <Tr>
-              <Td>{v[0]}</Td>
-              <Td>{v[1]}</Td>
+        {fetchList.isLoading && <Tbody>
+          <Tr>
+            <Td colSpan={2}>
+              Loading...
+            </Td>
+          </Tr>
+
+        </Tbody>}
+        {fetchList.data && <Tbody>
+          {fetchList.data.data.map((v) => (
+            <Tr key={v.id}>
+              <Td>
+                {v.name}
+              </Td>
+              <Td>
+                {listStatus.get(v.status)}
+              </Td>
+              <Td>
+                {v.person ? v.person + " Orang" : "-"}
+              </Td>
+              <Td>
+                {CurrencyID(v.gift, '-')}
+              </Td>
+              <Td>
+                {DateOnlyLocale(v.createdAt)}
+              </Td>
             </Tr>
           ))}
-        </Tbody>
+        </Tbody>}
       </Table>
+      <PaginationControl
+        total={fetchList.data && paginate.calculateTotalPage(fetchList.data?.total, fetchList.data.limit)}
+        page={paginate.page}
+        onChange={paginate.changePage}
+      ></PaginationControl>
     </TableContainer>
   )
 }

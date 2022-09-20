@@ -10,7 +10,7 @@ export interface CardGalleryCuteProps {
   description?: string
   totalHeart?: number
   type?: 'image' | 'video'
-  onGiveHeart?: () => any
+  onGiveHeart?: (add?: boolean) => any
 }
 
 export const CardGalleryCuteList = (props: { items: CardGalleryCuteProps[] }) => {
@@ -46,8 +46,8 @@ export const CardGalleryCuteList = (props: { items: CardGalleryCuteProps[] }) =>
       </Flex>
       <Flex ref={containerList} gap='3' flexWrap='nowrap' overflow='auto' mt='3'>
         {
-          props.items.map((prop) => (
-            <InvitationCardGalleryCute {...prop} />
+          props.items.map((prop, i) => (
+            <InvitationCardGalleryCute key={i} {...prop} />
           ))
         }
       </Flex>
@@ -83,9 +83,11 @@ export function InvitationCardGalleryCute(props: CardGalleryCuteProps) {
   const videoRefs = useRef<HTMLVideoElement>()
   const [onPlay, setOnPlay] = useState(false)
 
-  if (props.totalHeart) {
-    setTotalHeart(props.totalHeart)
-  }
+  useEffect(() => {
+    if (props.totalHeart) {
+      setTotalHeart(props.totalHeart)
+    }
+  }, [props.totalHeart])
 
   const BackgroundAsset = useMemo(() => {
     // default
@@ -114,7 +116,13 @@ export function InvitationCardGalleryCute(props: CardGalleryCuteProps) {
       setHeart(true)
       setTotalHeart((prev) => prev + 1)
       if (props.onGiveHeart) {
-        props.onGiveHeart()
+        props.onGiveHeart(true)
+      }
+    } else {
+      setHeart(false)
+      setTotalHeart((prev) => prev - 1)
+      if (props.onGiveHeart) {
+        props.onGiveHeart(false)
       }
     }
   }

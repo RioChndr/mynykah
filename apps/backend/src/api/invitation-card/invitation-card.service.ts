@@ -1,7 +1,7 @@
+import { DbConnectorService } from "@backend/database/connector/db-connector.service";
 import { BadRequestException, Injectable } from "@nestjs/common";
-import { Prisma, User } from "@prisma/client";
-import { DbConnectorService } from "src/database/connector/db-connector.service";
-import { InvitationCardCreateDTO, InvitationCardUpdateDTO } from "./type";
+import { Prisma, User, InvitationCard } from "@prisma/client";
+import { InvitationCardCreateDTO } from "./type";
 
 @Injectable()
 export class InvitationCardService {
@@ -9,21 +9,35 @@ export class InvitationCardService {
     private db: DbConnectorService
   ) { }
   create(payload: InvitationCardCreateDTO, user: User) {
-    const data: Prisma.InvitationCardCreateInput = {
-      ...payload,
+    const data: any = {
       user: { connect: { id: user.id } }
     }
+    Object.assign(data, payload)
     return this.db.invitationCard.create({
       data: data
     })
   }
 
-  getOne(id: string) {
-    return this.db.invitationCard.findUnique({
+  getOne(id: string, include: { galleries?: boolean } = {}) {
+    return this.db.invitationCard.findFirst({
       where: {
-        id
-      }
+        id,
+        deleteAt: null,
+      },
+      include: include.galleries && {
+        galleries: {
+          where: {
+            deleteAt: null
+          }
+        }
+      },
     })
+  }
+
+  async getOneWithError(id: string) {
+    const data = await this.getOne(id)
+    if (!data) throw new InvitationCardNotFound()
+    return data
   }
 
   getListByUser(user: User) {
@@ -31,22 +45,24 @@ export class InvitationCardService {
       where: {
         user: {
           id: user.id
-        }
+        },
+        deleteAt: null
       },
+      orderBy: {
+        createdAt: 'desc'
+      }
     })
   }
 
   async update(id: string, payloadUpdate: Prisma.InvitationCardUpdateInput) {
-    const data = await this.getOne(id)
-    if (!data) throw new BadRequestException(`Invitation card ${id} not found`)
-    Object.assign(data, payloadUpdate)
     return this.db.invitationCard.update({
       where: { id },
-      data,
+      data: payloadUpdate,
     })
   }
 
   async updateThumbnail(id: string, urlThumbnail: string) {
+    await this.getOneWithError(id)
     return this.update(id, {
       imageThumbnail: urlThumbnail
     })
@@ -58,13 +74,20 @@ export class InvitationCardService {
         id: invCardId,
         user: {
           id: user.id
-        }
+        },
+        deleteAt: null
       }
     })
   }
 
   async isTheOwnerWithError(invCardId: string, user: User) {
     const isOwned = await this.isTheOwner(invCardId, user)
-    if (!isOwned) throw new BadRequestException("Not found")
+    if (!isOwned) throw new InvitationCardNotFound()
+  }
+}
+
+export class InvitationCardNotFound extends BadRequestException {
+  constructor() {
+    super('Invitation card not found')
   }
 }

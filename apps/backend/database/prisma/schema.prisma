@@ -83,9 +83,12 @@ model InvitationCard {
   location String?
   locationCoord String?
   imageThumbnail String?
+  information String?
+  agenda String? @db.Text
   galleries InvitationCardGallery[]
   rsvp InvitationCardRSVP[]
   createdAt DateTime @default(now())
+  deleteAt DateTime?
 }
 
 model InvitationCardGallery {
@@ -95,15 +98,15 @@ model InvitationCardGallery {
   
   caption String
   image String
-  totalLikes Int
+  totalLikes Int? @default(0)
   likes InvitationCardGalleryLike[]
 
   createdAt DateTime @default(now())
-  deleteAt DateTime
+  deleteAt DateTime?
 }
 
 model InvitationCardGalleryLike {
-  id Int @id
+  id Int @id @default(autoincrement())
   userId String
   user User @relation(fields: [userId], references: [id])
   galleryId String
@@ -120,7 +123,8 @@ model InvitationCardRSVP {
   name String
   gift Int?
   status RSVPStatus
-  reason String
+  reason String?
+  person Int?
   createdAt DateTime @default(now())
 }
 

@@ -1,13 +1,12 @@
-import { Button, Center, Grid, Input, InputGroup, InputLeftAddon, InputLeftElement, Stack } from "@chakra-ui/react";
+import { Button, Center, Grid, Input, InputGroup, InputLeftAddon, InputLeftElement, InputRightElement, Stack } from "@chakra-ui/react";
 import { useState } from "react";
+import { MdClear } from "react-icons/md";
+interface ItemGift {
+  value: number
+  label?: string
+}
 
-export function InvitationFormGift() {
-  interface ItemGift {
-    value: number
-    label?: string
-  }
-
-  const [selected, setSelected] = useState<ItemGift>()
+export function InvitationFormGift({ value, onChange }) {
 
   const giftOptions = [20, 50, 100, 500, 700, 1000]
 
@@ -20,13 +19,16 @@ export function InvitationFormGift() {
     <Stack>
       <Grid templateColumns='repeat(3, 1fr)' templateRows='1fr 1fr' gap='3'>
         {giftList.map((v, i) => (
-          <Center>
+          <Center key={i}>
             <Button
-              colorScheme={selected?.value === v.value ? null : 'gray'}
-              variant={selected?.value === v.value ? 'solid' : 'outline'}
+              colorScheme={value === v.value ? null : 'gray'}
+              variant={value === v.value ? 'solid' : 'outline'}
               w={{ sm: 'full', md: '180' }}
               onClick={() => {
-                setSelected(v)
+                if (value === v.value) {
+                  return onChange(0)
+                }
+                onChange(v.value)
               }}
             >
               {v.label}
@@ -41,10 +43,11 @@ export function InvitationFormGift() {
         <Input
           type='number'
           placeholder="Custom"
-          value={selected?.value}
-          onChange={(e) => setSelected({
-            value: +e.target.value
-          })} />
+          value={value}
+          onChange={(e) => onChange(+e.target.value)} />
+        <InputRightElement onClick={() => onChange(0)} cursor='pointer'>
+          <MdClear></MdClear>
+        </InputRightElement>
       </InputGroup>
     </Stack>
   )

@@ -18,7 +18,9 @@ export class ApiController {
     };
   }
 
-  @NeedAuth(RoleType.ADMIN)
+  @NeedAuth({
+    role: RoleType.ADMIN
+  })
   @Get('secret-admin')
   secretAdmin(@Req() request: any) {
     return `secreet admin, hello ${JSON.stringify(request.user)}`;
