@@ -14,6 +14,6 @@ async function bootstrap() {
   app.enableShutdownHooks();
   setupSwagger(app, 'api');
   await app.listen(port);
-  AppInitLogger();
+  AppInitLogger(port);
 }
 bootstrap();

@@ -1,9 +1,8 @@
 import { Logger } from '@nestjs/common';
 import { RouteParent } from 'src/route-parent';
 
-export function AppInitLogger() {
+export function AppInitLogger(port: string | number) {
   const logger = new Logger('Initiate App');
-  const port = process.env.PORT || 3000;
   logger.log(`App Admin run on http://localhost:${port}${RouteParent.admin}`);
   logger.log(`App API run on http://localhost:${port}${RouteParent.server.api}`);
   logger.log(
