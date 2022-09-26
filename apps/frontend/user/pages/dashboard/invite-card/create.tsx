@@ -1,5 +1,6 @@
 import { Alert, AlertIcon, AlertTitle, Box, Container } from "@chakra-ui/react"
 import { ButtonBack } from "apps/frontend/user/components/common/ButtonBack"
+import { HeadTitle } from "apps/frontend/user/components/common/HeadTitle"
 import { QuickAlert } from "apps/frontend/user/components/common/QuickAlert"
 import { InvitationForm } from "apps/frontend/user/components/invitation-card/InvitationForm"
 import { apiInvitationCardCreate, DataInvitationCardCreate } from "apps/frontend/user/lib/useFetch/api/invitationcard-api"
@@ -35,6 +36,7 @@ export function InviteCardCreate() {
 
   return (
     <Container display='flex' flexDir='column' gap="6">
+      <HeadTitle>Undangan Online Baru</HeadTitle>
       <Box>
         <ButtonBack></ButtonBack>
       </Box>

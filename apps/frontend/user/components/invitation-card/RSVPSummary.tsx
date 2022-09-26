@@ -12,7 +12,8 @@ export function SummaryRsvp({ idCard, isPreview }) {
     if (isLoading) return "..."
     if (isError) return "0"
     const attendedData = data.find((v) => v.status === "attended")
-    return attendedData?._sum.person + " Orang"
+    const totalAttended = attendedData?._sum.person || 0
+    return totalAttended + " Orang"
   }, [data])
 
   if (isLoading) {

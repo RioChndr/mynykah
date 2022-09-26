@@ -83,6 +83,10 @@ export class InvitationCardService {
   async isTheOwnerWithError(invCardId: string, user: User) {
     const isOwned = await this.isTheOwner(invCardId, user)
     if (!isOwned) throw new InvitationCardNotFound()
+    return {
+      idCard: invCardId,
+      owner: user.id
+    }
   }
 }
 

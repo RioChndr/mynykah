@@ -5,8 +5,10 @@ import { FieldForm } from "apps/frontend/user/components/form/field";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { apiInvitationGalleryCreate } from "apps/frontend/user/lib/useFetch/api/invitation-gallery-api";
+import { InvitationCardTitle } from "apps/frontend/user/components/invitation-card/InvitationCardTitle";
+import { apiInvitationCardSSRProps } from "apps/frontend/user/lib/useFetch/api/invitationcard-api";
 
-export default function InvitationCardEditGalleryAdd() {
+export default function InvitationCardEditGalleryAdd({ data: DetailInvitation }) {
   const router = useRouter();
   const id = router.query.id as string;
   const toast = useToast()
@@ -48,6 +50,7 @@ export default function InvitationCardEditGalleryAdd() {
 
   return (
     <Container>
+      <InvitationCardTitle data={DetailInvitation} suffix="Tambah Galeri"></InvitationCardTitle>
       <Stack spacing={3}>
         <Box>
           <ButtonBack></ButtonBack>
@@ -78,4 +81,10 @@ export default function InvitationCardEditGalleryAdd() {
       </Stack>
     </Container>
   )
+}
+
+export async function getServerSideProps(context: any) {
+  return await apiInvitationCardSSRProps(context, {
+    throwIfNotOwner: true,
+  })
 }

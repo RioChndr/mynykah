@@ -2,6 +2,7 @@ import { Box, Button, Container, Flex, Grid, GridItem, Heading, Icon, Image, Tex
 import Link from "next/link"
 import Router from "next/router"
 import { FiPlus } from 'react-icons/fi'
+import { HeadTitle } from "../../components/common/HeadTitle"
 import { ButtonOpenInvitationCard } from "../../components/invitation-card/HelperComponent"
 import { imageUploadUrl } from "../../lib/file-helper/image-upload-url"
 import { useInvitationCardList } from "../../lib/useFetch/api/invitationcard-api"
@@ -20,30 +21,33 @@ function CardInvitation({
   id = '1'
 }) {
   return (
-    <GridItem
-      borderWidth='1px'
-      borderRadius='lg'
-      overflow='hidden'
-      w='100%'
-      flexDir='column'
-    >
-      <Image src={imageUploadUrl(image)} width='full' height='300' objectFit='cover' />
-      <Box p='6'>
-        <Heading size='lg'>{name}</Heading>
-        <Text size='xs'>
-          {DateOnlyLocale(date)}
-        </Text>
-        <Text my='3'>
-          {description}
-        </Text>
-        <Flex justifyContent='space-between' mt='3'>
-          <ButtonOpenInvitationCard id={id} size='sm' variant='outline' />
-          <Button size='sm' onClick={() => Router.push(`/dashboard/invite-card/${id}/detail`)}>
-            Lihat Detail
-          </Button>
-        </Flex>
-      </Box>
-    </GridItem>
+    <>
+      <HeadTitle>Dashboard Undangan Online</HeadTitle>
+      <GridItem
+        borderWidth='1px'
+        borderRadius='lg'
+        overflow='hidden'
+        w='100%'
+        flexDir='column'
+      >
+        <Image src={imageUploadUrl(image)} width='full' height='300' objectFit='cover' />
+        <Box p='6'>
+          <Heading size='lg'>{name}</Heading>
+          <Text size='xs'>
+            {DateOnlyLocale(date)}
+          </Text>
+          <Text my='3'>
+            {description}
+          </Text>
+          <Flex justifyContent='space-between' mt='3'>
+            <ButtonOpenInvitationCard id={id} size='sm' variant='outline' />
+            <Button size='sm' onClick={() => Router.push(`/dashboard/invite-card/${id}/detail`)}>
+              Lihat Detail
+            </Button>
+          </Flex>
+        </Box>
+      </GridItem>
+    </>
   )
 }
 

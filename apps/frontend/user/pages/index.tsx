@@ -1,10 +1,11 @@
 import { Box, Button, Center, Container, Flex, Heading, Stack, Text } from '@chakra-ui/react';
-import Link from 'next/link'; 
+import Link from 'next/link';
+import { HeadTitle } from '../components/common/HeadTitle';
 
 export function Index() {
-  const CardFeature = ({title, desc}: {title?: string, desc?: string}) => {
+  const CardFeature = ({ title, desc }: { title?: string, desc?: string }) => {
     return (
-      <Box px='3' py='6'borderRadius='4' border='1px' borderColor='primary' textAlign='center' width={{base: 'full', lg: '30%'}}>
+      <Box px='3' py='6' borderRadius='4' border='1px' borderColor='primary' textAlign='center' width={{ base: 'full', lg: '30%' }}>
         <Heading size='md'>
           {title || 'feature 1'}
         </Heading>
@@ -34,6 +35,7 @@ export function Index() {
 
   return (
     <Center mt='3' flexDir='column'>
+      <HeadTitle title='Home'></HeadTitle>
       <Stack direction='column' textAlign='center' spacing='4'>
         <Heading size='4xl' marginBottom='6'>
           Mynykah
@@ -57,10 +59,10 @@ export function Index() {
           <Heading size='lg' textAlign='center' mb='3'>
             Feature
           </Heading>
-          <Stack direction={{base: 'column', lg: 'row'}}>
+          <Stack direction={{ base: 'column', lg: 'row' }}>
             {
               listFeature.map((feat, i) => (
-                <CardFeature key={i} title={feat[0]} desc={feat[1]}/>
+                <CardFeature key={i} title={feat[0]} desc={feat[1]} />
               ))
             }
           </Stack>

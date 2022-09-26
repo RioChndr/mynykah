@@ -41,7 +41,7 @@ export function PageInvitationLayout(props: PageInviationProps) {
         totalHeart: item.totalLikes,
         onGiveHeart(isAdd?: boolean) {
           if (!authContext.user) {
-            router.push(configUseAuth.loginPage)
+            router.push(`${configUseAuth.loginPage}?r=${router.asPath}`)
             return;
           }
           return apiInvitationGalleryLikesToggle(item.id)

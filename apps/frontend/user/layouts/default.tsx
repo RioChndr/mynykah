@@ -7,9 +7,9 @@ type Props = {
   children?: React.ReactNode
 }
 
-const LayoutDefault: React.FC<Props> = ({children}) => (
+const LayoutDefault: React.FC<Props> = ({ children }) => (
   <>
-    <Box as='main' minH='calc(100vh)'>
+    <Box as='main' minH='calc(100vh)' mb='12'>
       <Navbar></Navbar>
       {children}
     </Box>

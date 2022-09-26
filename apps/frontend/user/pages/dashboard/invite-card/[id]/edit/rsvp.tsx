@@ -2,21 +2,24 @@ import { Checkbox, Container, Flex, Grid, GridItem, HStack, Table, TableCaption,
 import { CardStatistic } from "apps/frontend/user/components/common/CardStatistic"
 import { HeadingSection } from "apps/frontend/user/components/common/HeadingSection"
 import { PaginationControl, usePaginationControl } from "apps/frontend/user/components/common/PaginationControl"
+import { InvitationCardTitle } from "apps/frontend/user/components/invitation-card/InvitationCardTitle"
 import { InvitationHeaderPage } from "apps/frontend/user/components/invitation-card/InvitationHeaderPage"
 import { apiRsvpList, apiRsvpTotal } from "apps/frontend/user/lib/useFetch/api/invitation-rsvp-api"
+import { apiInvitationCardSSRProps } from "apps/frontend/user/lib/useFetch/api/invitationcard-api"
 import { CurrencyID, DateOnlyLocale } from "apps/frontend/user/lib/utils/text-utils"
 import { useRouter } from "next/router"
 import { useMemo, useState } from "react"
 import { BsFillGiftFill, BsFillPersonCheckFill, BsFillPersonXFill } from "react-icons/bs"
 import { urlPageInvitationDetail } from "../detail"
 
-export function InvitationCardEditRsvp() {
+export function InvitationCardEditRsvp({ data }) {
   const router = useRouter()
   const id = router.query.id as string
 
   return (
     <Container display='flex' gap='6' flexDirection='column' mb='12'>
-      <InvitationHeaderPage backTo={urlPageInvitationDetail(id)} />
+      <InvitationCardTitle data={data} suffix="RSVP"></InvitationCardTitle>
+      <InvitationHeaderPage backTo={urlPageInvitationDetail(id)} data={data} />
       <HeadingSection
         title="RSVP"
         description="RSVP dicantumkan untuk memberitahu tamu bahwa mereka perlu melakukan konfirmasi sebelum menghadiri acaranya"
@@ -35,6 +38,12 @@ export function InvitationCardEditRsvp() {
 }
 
 export default InvitationCardEditRsvp
+
+export async function getServerSideProps(context: any) {
+  return await apiInvitationCardSSRProps(context, {
+    throwIfNotOwner: true,
+  })
+}
 
 function StatisticRSVP() {
   const router = useRouter()
@@ -175,4 +184,8 @@ function TableGuest() {
       ></PaginationControl>
     </TableContainer>
   )
+}
+
+export function urlPageInvitationRsvp(id: string) {
+  return `/dashboard/invite-card/${id}/edit/rsvp`
 }

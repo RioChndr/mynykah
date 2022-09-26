@@ -69,10 +69,13 @@ export async function apiInvitationCardSSRProps(context: GetServerSidePropsConte
 
   try {
     if (props.throwIfNotOwner) {
-      await apiInvitationCardIsOwner(id)
+      const isOwner = await apiInvitationCardIsOwner(id)
+      if (!isOwner.data) {
+        throw new Error('not owner')
+      }
     }
     const data = await apiInvitationCardDetailSSR(id)
-    console.log(data.data)
+
     if (!data.data) {
       return {
         redirect: {
@@ -87,7 +90,6 @@ export async function apiInvitationCardSSRProps(context: GetServerSidePropsConte
       }
     }
   } catch (err) {
-    console.log(err)
     return {
       redirect: {
         permanent: false,

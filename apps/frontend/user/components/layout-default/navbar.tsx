@@ -3,7 +3,7 @@ import Router from "next/router";
 import NextLink from 'next/link'
 import { useAuth } from "../../lib/auth/useAuth";
 import { FiMenu } from 'react-icons/fi'
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 
 interface MenuItemInterface {
   text: string
@@ -13,15 +13,24 @@ interface MenuItemInterface {
 
 export default function Navbar() {
   const authContext = useAuth()
-  const Listmenu:MenuItemInterface[] = [
-    {text: "Home", to: '/'},
-    {text: "Contact", to: '/contact'},
-    {text: "About", to: '/about'},
-  ]
+  const Listmenu: MenuItemInterface[] = useMemo(() => {
+    const res = [
+      { text: "Home", to: '/' },
+      { text: "Contact", to: '/contact' },
+      { text: "About", to: '/about' },
+    ]
+    if (authContext.user) {
+      // add new item at res index 2
+      res.splice(1, 0, {
+        text: 'Undangan Online',
+        to: '/dashboard'
+      })
+    }
+    return res;
+  }, [authContext.user])
 
-  const AccountMenuList:MenuItemInterface[] = [
-    {text: 'Account', to: '/account'},
-    {text: 'Logout', onClick: () => authContext.logout()},
+  const AccountMenuList: MenuItemInterface[] = [
+    { text: 'Logout', onClick: () => authContext.logout() },
   ]
 
   const ListMenuComponent = ({ isVertical = false }) => {
@@ -36,7 +45,7 @@ export default function Navbar() {
     )
   }
 
-  const ButtonAuth = ({ direction }: {direction: StackDirection}) => {
+  const ButtonAuth = ({ direction }: { direction: StackDirection }) => {
     return (
       <Stack spacing="3" direction={direction}>
         <Button variant="ghost" onClick={() => Router.push('/login')}>Sign in</Button>
@@ -46,7 +55,7 @@ export default function Navbar() {
   }
 
   const ProfileMenuComponent = () => {
-    if(!authContext.user){
+    if (!authContext.user) {
       return (
         <ButtonAuth direction="row" />
       )
@@ -54,15 +63,15 @@ export default function Navbar() {
 
     const AccountMenuListComponent = () => {
       const listMenu = AccountMenuList.map((menu, i) => {
-        let MenuItemProps:any = {}
-        if(menu.to){
+        let MenuItemProps: any = {}
+        if (menu.to) {
           MenuItemProps = {
             onClick: () => Router.push(menu.to)
           }
         }
-        if(menu.onClick){
+        if (menu.onClick) {
           MenuItemProps = {
-            onClick : menu.onClick
+            onClick: menu.onClick
           }
         }
 
@@ -80,28 +89,28 @@ export default function Navbar() {
     return (
       <Menu>
         <MenuButton>
-          <Avatar name={authContext.user?.name} src={authContext.user?.picture} bg='primary' color='white' outline='1'/>
+          <Avatar name={authContext.user?.name} src={authContext.user?.picture} bg='primary' color='white' outline='1' />
         </MenuButton>
         <AccountMenuListComponent />
       </Menu>
     )
   }
-  
+
   const DrawerSide = ({ isDesktop }) => {
     const { onOpen, isOpen, onClose } = useDisclosure()
     const buttonRef = React.useRef()
 
     const AccountComponent = () => {
-      if(!authContext.user){
+      if (!authContext.user) {
         return (<ButtonAuth direction="column" />)
       }
       const listMenuAccountComponent = () => (
         AccountMenuList.map((menu, i) => {
-          const boxProps:any = {}
-          if(menu.to){
+          const boxProps: any = {}
+          if (menu.to) {
             boxProps.onClick = () => Router.push(menu.to)
           }
-          if(menu.onClick){
+          if (menu.onClick) {
             boxProps.onClick = menu.onClick
           }
           return (
@@ -117,7 +126,7 @@ export default function Navbar() {
       return (
         <div>
           <Box display='flex' alignItems='center'>
-            <Avatar name={authContext.user?.name} src={authContext.user?.picture} bg='primary' color='white' outline='1' mr='3'/>
+            <Avatar name={authContext.user?.name} src={authContext.user?.picture} bg='primary' color='white' outline='1' mr='3' />
             <Text size="2xl">{authContext.user?.name}</Text>
           </Box>
           {listMenuAccountComponent()}
@@ -158,8 +167,8 @@ export default function Navbar() {
     )
   }
 
-  let isDesktop = useBreakpointValue({ base: false, lg: true }, {fallback: 'base'})
-  
+  let isDesktop = useBreakpointValue({ base: false, lg: true }, { fallback: 'base' })
+
   return (
     <Box as="section" pb={{ base: '4', md: '8' }}>
       <Box as="nav" bg="bg-surface" boxShadow={useColorModeValue('sm', 'sm-dark')}>
@@ -170,14 +179,14 @@ export default function Navbar() {
                 Mynykah
               </Text>
             </NextLink>
-              {isDesktop ? (
-                <Flex justify="space-between" flex="1">
-                  <ListMenuComponent />
-                  <ProfileMenuComponent />
-                </Flex>
-              ) : (
-                <DrawerSide isDesktop={isDesktop} />
-              )}
+            {isDesktop ? (
+              <Flex justify="space-between" flex="1">
+                <ListMenuComponent />
+                <ProfileMenuComponent />
+              </Flex>
+            ) : (
+              <DrawerSide isDesktop={isDesktop} />
+            )}
           </HStack>
         </Container>
       </Box>

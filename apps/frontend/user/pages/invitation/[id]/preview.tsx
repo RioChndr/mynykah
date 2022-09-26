@@ -1,6 +1,7 @@
 import { Alert, AlertIcon, Button, Container, Flex, Text } from "@chakra-ui/react"
+import { InvitationCardTitle } from "apps/frontend/user/components/invitation-card/InvitationCardTitle"
 import { PageInvitationLayout } from "apps/frontend/user/components/invitation-card/PageInvitation"
-import { apiInvitationCardSSRProps } from "apps/frontend/user/lib/useFetch/api/invitationcard-api"
+import { apiInvitationCardIsOwnerSwr, apiInvitationCardSSRProps } from "apps/frontend/user/lib/useFetch/api/invitationcard-api"
 import { GetServerSidePropsContext } from "next"
 import Link from "next/link"
 import { useRouter } from "next/router"
@@ -9,8 +10,17 @@ export function InviationIndexPagePreview(props: any) {
   const router = useRouter()
   const { id } = router.query
   const prodLink = `/invitation/${id}`
+
+  // double Checking
+  const isTheOwner = apiInvitationCardIsOwnerSwr(id + "")
+  if (isTheOwner.isError) {
+    router.replace(`/invitation/${id}`)
+    return <></>
+  }
+
   return (
     <>
+      <InvitationCardTitle data={props.data}></InvitationCardTitle>
       <Container mb='3'>
         <Alert variant='top-accent' status='info'>
           <AlertIcon />

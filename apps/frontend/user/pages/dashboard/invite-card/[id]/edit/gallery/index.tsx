@@ -1,26 +1,35 @@
 import { Box, Button, Container, Flex, Grid, GridItem, Heading, HStack, Image, Stack, Text, useToast } from "@chakra-ui/react"
 import { ButtonBack } from "apps/frontend/user/components/common/ButtonBack"
+import { InvitationCardTitle } from "apps/frontend/user/components/invitation-card/InvitationCardTitle"
 import { InvitationHeaderPage } from "apps/frontend/user/components/invitation-card/InvitationHeaderPage"
 import { imageUploadUrl } from "apps/frontend/user/lib/file-helper/image-upload-url"
 import { apiInvitationGalleryDelete, apiInvitationGalleryList } from "apps/frontend/user/lib/useFetch/api/invitation-gallery-api"
+import { apiInvitationCardSSRProps } from "apps/frontend/user/lib/useFetch/api/invitationcard-api"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { AiOutlineDelete, AiOutlineLike } from "react-icons/ai"
 import { FiPlus } from "react-icons/fi"
 import { urlPageInvitationDetail } from "../../detail"
 
-export function InvitationCardEditGallery() {
+export function InvitationCardEditGallery({ data }) {
   const router = useRouter()
   const id = router.query.id as string
 
   return (
     <Container>
-      <Stack>
-        <InvitationHeaderPage backTo={urlPageInvitationDetail(id)}></InvitationHeaderPage>
+      <Stack spacing='6'>
+        <InvitationCardTitle data={data} suffix="List Galeri"></InvitationCardTitle>
+        <InvitationHeaderPage backTo={urlPageInvitationDetail(id)} data={data}></InvitationHeaderPage>
         <Flex justifyContent='space-between' alignItems='center'>
-          <Heading size='lg'>
-            Galleri
-          </Heading>
+          <Box>
+            <Heading size='md'>
+              Edit Galleri
+            </Heading>
+            <Text>
+              Beritahu orang-orang kenangan anda
+            </Text>
+
+          </Box>
           <Link href={`/dashboard/invite-card/${id}/edit/gallery/add`} passHref>
             <Button as='a' leftIcon={<FiPlus />} variant='outline'>
               Tambah Galleri
@@ -105,4 +114,11 @@ function GalleryList() {
 
 export function urlPageInvitationGalleryEdit(id: string) {
   return `/dashboard/invite-card/${id}/edit/gallery`
+}
+
+
+export async function getServerSideProps(context: any) {
+  return await apiInvitationCardSSRProps(context, {
+    throwIfNotOwner: true,
+  })
 }

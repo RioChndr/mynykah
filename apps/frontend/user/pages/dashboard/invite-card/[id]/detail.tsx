@@ -1,15 +1,20 @@
 import { Box, Container, Flex, Grid, GridItem, Icon, Stat, StatLabel, StatNumber, Text } from "@chakra-ui/react";
 import { CardStatistic } from "apps/frontend/user/components/common/CardStatistic";
 import { HeadingSection } from "apps/frontend/user/components/common/HeadingSection";
+import { HeadTitle } from "apps/frontend/user/components/common/HeadTitle";
+import { InvitationCardTitle } from "apps/frontend/user/components/invitation-card/InvitationCardTitle";
 import { InvitationHeaderPage } from "apps/frontend/user/components/invitation-card/InvitationHeaderPage";
 import { apiRsvpTotal } from "apps/frontend/user/lib/useFetch/api/invitation-rsvp-api";
+import { apiInvitationCardDetail, apiInvitationCardSSRProps, DataInvitationCard } from "apps/frontend/user/lib/useFetch/api/invitationcard-api";
+import { GetServerSidePropsContext } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 import { AiOutlineWarning } from "react-icons/ai";
 import { BsFillGiftFill, BsFillPersonCheckFill, BsPencilSquare } from "react-icons/bs";
+import { urlPageInvitationRsvp } from "./edit/rsvp";
 
-export function InviteCardDetail() {
+export function InviteCardDetail(props: { data: DataInvitationCard }) {
   const router = useRouter()
   const id = router.query.id
 
@@ -21,23 +26,32 @@ export function InviteCardDetail() {
   }
 
   return (
-    <Container display='flex' flexDirection='column' gap='3'>
-      <InvitationHeaderPage backTo={'/dashboard'} />
-      <SectionStatistic />
-      <Flex direction='column' gap='3'>
-        <HeadingSection title="Fitur undangan" description="Anda bisa pilih Fitur undangan sesuai keinginan anda" />
-        <Flex direction='column' gap='3' width={{ base: 'full', md: '50%' }}>
-          <FeatureControl name="Halaman Undangan" editPage={pageInviteCard.editInfo} />
-          <FeatureControl name="Thumbnail Undangan" editPage={pageInviteCard.editThumbnail} />
-          <FeatureControl name="Galeri" editPage={pageInviteCard.editGallery} />
-          <FeatureControl name="RSVP" editPage={pageInviteCard.editRsvp} />
+    <>
+      <InvitationCardTitle data={props.data} suffix="Detail"></InvitationCardTitle>
+      <Container display='flex' flexDirection='column' gap='3'>
+        <InvitationHeaderPage backTo={'/dashboard'} data={props.data} />
+        <SectionStatistic />
+        <Flex direction='column' gap='3'>
+          <HeadingSection title="Fitur undangan" description="Anda bisa pilih Fitur undangan sesuai keinginan anda" />
+          <Flex direction='column' gap='3' width={{ base: 'full', md: '50%' }}>
+            <FeatureControl name="Halaman Undangan" editPage={pageInviteCard.editInfo} />
+            <FeatureControl name="Thumbnail Undangan" editPage={pageInviteCard.editThumbnail} />
+            <FeatureControl name="Galeri" editPage={pageInviteCard.editGallery} />
+            <FeatureControl name="RSVP" editPage={pageInviteCard.editRsvp} />
+          </Flex>
         </Flex>
-      </Flex>
-    </Container>
+      </Container>
+    </>
   )
 }
 
 export default InviteCardDetail
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  return await apiInvitationCardSSRProps(context, {
+    throwIfNotOwner: true,
+  })
+}
 
 function SectionStatistic() {
   const router = useRouter()
@@ -48,7 +62,8 @@ function SectionStatistic() {
     if (fetchTotal.isLoading) return "..."
     if (fetchTotal.isError) return "0"
     const attendedData = fetchTotal.data.find((v) => v.status === "attended")
-    return attendedData?._sum.person + " Orang"
+    const total = attendedData?._sum.person || 0
+    return total + " Orang"
   }, [fetchTotal.data])
 
   const totalGift = useMemo(() => {
@@ -68,7 +83,7 @@ function SectionStatistic() {
     />
     <Grid templateColumns={{ base: '1fr 1fr', md: 'repeat(3, 1fr)', lg: 'repeat(4, 1fr)' }} gap='6'>
       <GridItem>
-        <CardStatistic name="Jumlah tamu" number={totalGuest} icon={<BsFillPersonCheckFill size='24' />} />
+        <CardStatistic name="Jumlah tamu" number={totalGuest} icon={<BsFillPersonCheckFill size='24' />} to={urlPageInvitationRsvp(id)} />
       </GridItem>
       <GridItem>
         <CardStatistic name="Jumlah Gift" number={totalGift} icon={<BsFillGiftFill size="20" />} />

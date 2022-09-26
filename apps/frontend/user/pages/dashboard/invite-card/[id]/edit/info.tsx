@@ -1,20 +1,22 @@
 import { Box, Container, Text } from "@chakra-ui/react"
 import { ButtonBack } from "apps/frontend/user/components/common/ButtonBack"
+import { InvitationCardTitle } from "apps/frontend/user/components/invitation-card/InvitationCardTitle"
 import { InvitationForm } from "apps/frontend/user/components/invitation-card/InvitationForm"
 import { InvitationHeaderPage } from "apps/frontend/user/components/invitation-card/InvitationHeaderPage"
-import { apiInvitationCardDetail, apiInvitationCardUpdate } from "apps/frontend/user/lib/useFetch/api/invitationcard-api"
+import { apiInvitationCardDetail, apiInvitationCardSSRProps, apiInvitationCardUpdate } from "apps/frontend/user/lib/useFetch/api/invitationcard-api"
 import _ from "lodash"
 import Router, { useRouter } from "next/router"
 import { useState } from "react"
 import { urlPageInvitationDetail } from "../detail"
 
-export function InviteCardEditInfo() {
+export function InviteCardEditInfo({ data }) {
   const router = useRouter()
   const id = router.query.id as string
 
   return (
     <Container display='flex' flexDir='column' gap="6">
-      <InvitationHeaderPage backTo={urlPageInvitationDetail(id)}></InvitationHeaderPage>
+      <InvitationCardTitle data={data} suffix="Edit Info"></InvitationCardTitle>
+      <InvitationHeaderPage backTo={urlPageInvitationDetail(id)} data={data}></InvitationHeaderPage>
 
       <SectionEdit id={id} />
     </Container>
@@ -60,10 +62,16 @@ function SectionEdit({ id }) {
       loading={isLoading}
       onSubmit={onSubmit}
       data={initialValues}
-      title={'Edit invitation'}
+      title={'Edit Halaman Undangan'}
       hideFile={true}
     />
   )
 }
 
 export default InviteCardEditInfo
+
+export async function getServerSideProps(context: any) {
+  return await apiInvitationCardSSRProps(context, {
+    throwIfNotOwner: true,
+  })
+}

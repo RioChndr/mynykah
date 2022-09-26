@@ -1,10 +1,33 @@
 import { Button, Center, Grid, Input, InputGroup, InputLeftAddon, InputLeftElement, InputRightElement, Stack } from "@chakra-ui/react";
 import { useState } from "react";
-import { MdClear } from "react-icons/md";
+import { MdClear, MdClose } from "react-icons/md";
 interface ItemGift {
   value: number
   label?: string
 }
+
+function GiftButton({ giftValue, valueSelected, onChange }) {
+  const isSelected = valueSelected === giftValue.value
+  return (
+    <Center>
+      <Button
+        colorScheme={isSelected ? null : 'gray'}
+        variant={isSelected ? 'solid' : 'outline'}
+        w={{ sm: 'full', md: '180' }}
+        onClick={() => {
+          if (isSelected) {
+            return onChange(0)
+          }
+          onChange(giftValue.value)
+        }}
+        rightIcon={isSelected && <MdClose />}
+      >
+        {giftValue.label}
+      </Button>
+    </Center>
+  )
+}
+
 
 export function InvitationFormGift({ value, onChange }) {
 
@@ -19,21 +42,12 @@ export function InvitationFormGift({ value, onChange }) {
     <Stack>
       <Grid templateColumns='repeat(3, 1fr)' templateRows='1fr 1fr' gap='3'>
         {giftList.map((v, i) => (
-          <Center key={i}>
-            <Button
-              colorScheme={value === v.value ? null : 'gray'}
-              variant={value === v.value ? 'solid' : 'outline'}
-              w={{ sm: 'full', md: '180' }}
-              onClick={() => {
-                if (value === v.value) {
-                  return onChange(0)
-                }
-                onChange(v.value)
-              }}
-            >
-              {v.label}
-            </Button>
-          </Center>
+          <GiftButton
+            key={i}
+            giftValue={v}
+            valueSelected={value}
+            onChange={onChange}
+          />
         ))}
       </Grid>
       <InputGroup>
