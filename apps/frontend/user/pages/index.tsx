@@ -1,6 +1,8 @@
 import { Box, Button, Center, Container, Flex, Heading, Stack, Text } from '@chakra-ui/react';
 import Link from 'next/link';
 import { HeadTitle } from '../components/common/HeadTitle';
+import { TitleApp } from '../components/common/TitleApp';
+import { AppConfig } from '../config/app-config';
 
 export function Index() {
   const CardFeature = ({ title, desc }: { title?: string, desc?: string }) => {
@@ -38,7 +40,7 @@ export function Index() {
       <HeadTitle title='Home'></HeadTitle>
       <Stack direction='column' textAlign='center' spacing='4'>
         <Heading size='4xl' marginBottom='6'>
-          Mynykah
+          <TitleApp></TitleApp>
         </Heading>
         <Heading size='xl'>
           Bersedia untuk menikah sekarang ?

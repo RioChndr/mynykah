@@ -4,6 +4,7 @@ import Head from "next/head";
 import Router, { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { HeadTitle } from "../components/common/HeadTitle";
+import { TitleApp } from "../components/common/TitleApp";
 import { useAuth } from "../lib/auth/useAuth";
 
 declare global {
@@ -53,7 +54,7 @@ export function Login(props) {
           <Box>
             <Box textAlign='center'>
               <Text fontSize='3xl' fontWeight='bold' color='primary'>
-                Mynykah
+                <TitleApp></TitleApp>
               </Text>
               <Text fontSize='xl' my='6'>
                 <strong>

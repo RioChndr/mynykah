@@ -1,9 +1,11 @@
-import { Box, Flex, Button, Text, Container, Avatar, Wrap, WrapItem, HStack, Menu, MenuButton, MenuList, MenuItem, Link, useBreakpointValue, useColorModeValue, ButtonGroup, IconButton, Drawer, useDisclosure, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody, Stack, Divider, StackDirection } from "@chakra-ui/react";
+import { Box, Flex, Button, Text, Container, Avatar, Wrap, WrapItem, HStack, Menu, MenuButton, MenuList, MenuItem, Link, useBreakpointValue, useColorModeValue, ButtonGroup, IconButton, Drawer, useDisclosure, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody, Stack, Divider, StackDirection, Badge } from "@chakra-ui/react";
 import Router from "next/router";
 import NextLink from 'next/link'
 import { useAuth } from "../../lib/auth/useAuth";
 import { FiMenu } from 'react-icons/fi'
 import React, { useEffect, useMemo } from "react";
+import { AppConfig } from "../../config/app-config";
+import { TitleApp } from "../common/TitleApp";
 
 interface MenuItemInterface {
   text: string
@@ -16,7 +18,6 @@ export default function Navbar() {
   const Listmenu: MenuItemInterface[] = useMemo(() => {
     const res = [
       { text: "Home", to: '/' },
-      { text: "Contact", to: '/contact' },
       { text: "About", to: '/about' },
     ]
     if (authContext.user) {
@@ -176,7 +177,7 @@ export default function Navbar() {
           <HStack spacing="10" justify="space-between">
             <NextLink href='/' passHref>
               <Text as='a' fontSize='2xl' fontWeight='bold'>
-                Mynykah
+                <TitleApp></TitleApp>
               </Text>
             </NextLink>
             {isDesktop ? (

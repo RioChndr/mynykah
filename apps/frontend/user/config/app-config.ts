@@ -1,3 +1,4 @@
 export const AppConfig = {
-  name: 'Mynykah'
+  name: 'Mynykah',
+  isBeta: true
 }
