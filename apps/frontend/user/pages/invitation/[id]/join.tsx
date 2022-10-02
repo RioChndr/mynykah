@@ -11,6 +11,7 @@ import { BiMinus, BiPlus } from 'react-icons/bi'
 import { InvitationContainer } from "../../../components/invitation-card/Container"
 import { InvitationFormGift } from "../../../components/invitation-card/FormGift"
 import * as yup from 'yup'
+import { useAppConfig } from "apps/frontend/user/config/app-config"
 
 interface FormInterface {
   name: string,
@@ -22,6 +23,7 @@ export function InvitationJoin(props: any) {
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
   const toast = useToast()
+  const appConfig = useAppConfig()
 
   const validationSchema = useMemo(() => {
     return yup.object().shape({
@@ -47,7 +49,7 @@ export function InvitationJoin(props: any) {
       toast({
         title: 'Berhasil simpan RSVP',
         status: 'success',
-        description: 'Terima kasih telah mengisi undangan',
+        description: 'Terima kasih telah mengisi undangan. Akan kembali dalam 3 detik',
         duration: 3000,
         onCloseComplete: () => {
           router.push(`/invitation/${props.data.id}`)
@@ -94,12 +96,12 @@ export function InvitationJoin(props: any) {
                         </FormErrorMessage>
                       </FormControl>
                     </Stack>
-                    <Stack>
+                    {appConfig.featureGift && <Stack>
                       <Heading size='md' textAlign='center'>
                         Gift / Hadiah
                       </Heading>
                       <InvitationFormGift value={values.gift} onChange={(val: any) => setFieldValue('gift', val)} />
-                    </Stack>
+                    </Stack>}
                     <Stack>
                       <Button type='submit' isLoading={isLoading}>
                         Saya akan Hadir

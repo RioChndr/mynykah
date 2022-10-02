@@ -4,6 +4,7 @@ import { HeadingSection } from "apps/frontend/user/components/common/HeadingSect
 import { HeadTitle } from "apps/frontend/user/components/common/HeadTitle";
 import { InvitationCardTitle } from "apps/frontend/user/components/invitation-card/InvitationCardTitle";
 import { InvitationHeaderPage } from "apps/frontend/user/components/invitation-card/InvitationHeaderPage";
+import { useAppConfig } from "apps/frontend/user/config/app-config";
 import { apiRsvpTotal } from "apps/frontend/user/lib/useFetch/api/invitation-rsvp-api";
 import { apiInvitationCardDetail, apiInvitationCardSSRProps, DataInvitationCard } from "apps/frontend/user/lib/useFetch/api/invitationcard-api";
 import { GetServerSidePropsContext } from "next";
@@ -57,6 +58,7 @@ function SectionStatistic() {
   const router = useRouter()
   const id = router.query.id as string
   const fetchTotal = apiRsvpTotal(id)
+  const appConfig = useAppConfig()
 
   const totalGuest = useMemo(() => {
     if (fetchTotal.isLoading) return "..."
@@ -85,9 +87,9 @@ function SectionStatistic() {
       <GridItem>
         <CardStatistic name="Jumlah tamu" number={totalGuest} icon={<BsFillPersonCheckFill size='24' />} to={urlPageInvitationRsvp(id)} />
       </GridItem>
-      <GridItem>
+      {appConfig.featureGift && <GridItem>
         <CardStatistic name="Jumlah Gift" number={totalGift} icon={<BsFillGiftFill size="20" />} />
-      </GridItem>
+      </GridItem>}
     </Grid>
   </Flex>)
 }

@@ -2,7 +2,8 @@ import { createContext, useContext } from "react";
 
 const AppConfig = {
   name: 'Mynykah',
-  isBeta: true
+  isBeta: true,
+  featureGift: false
 }
 
 const AppConfigContext = createContext(AppConfig);

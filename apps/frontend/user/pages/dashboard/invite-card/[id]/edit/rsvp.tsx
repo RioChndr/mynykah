@@ -4,6 +4,7 @@ import { HeadingSection } from "apps/frontend/user/components/common/HeadingSect
 import { PaginationControl, usePaginationControl } from "apps/frontend/user/components/common/PaginationControl"
 import { InvitationCardTitle } from "apps/frontend/user/components/invitation-card/InvitationCardTitle"
 import { InvitationHeaderPage } from "apps/frontend/user/components/invitation-card/InvitationHeaderPage"
+import { useAppConfig } from "apps/frontend/user/config/app-config"
 import { apiRsvpList, apiRsvpTotal } from "apps/frontend/user/lib/useFetch/api/invitation-rsvp-api"
 import { apiInvitationCardSSRProps } from "apps/frontend/user/lib/useFetch/api/invitationcard-api"
 import { CurrencyID, DateOnlyLocale } from "apps/frontend/user/lib/utils/text-utils"
@@ -49,6 +50,7 @@ function StatisticRSVP() {
   const router = useRouter()
   const id = router.query.id as string
   const fetchTotal = apiRsvpTotal(id)
+  const appConfig = useAppConfig()
 
   const totalGuest = useMemo(() => {
     if (fetchTotal.isLoading) return "..."
@@ -89,13 +91,13 @@ function StatisticRSVP() {
           icon={<BsFillPersonCheckFill size='24' />}
         />
       </GridItem>
-      <GridItem>
+      {appConfig.featureGift && <GridItem>
         <CardStatistic
           name="Jumlah Gift"
           number={totalGift}
           icon={<BsFillGiftFill size="20" />}
         />
-      </GridItem>
+      </GridItem>}
       <GridItem>
         <CardStatistic
           name="Jumlah Tidak hadir"
@@ -139,7 +141,6 @@ function TableGuest() {
                 "Nama",
                 "Status",
                 "Tamu",
-                "Gift",
                 "Tanggal Konfirmasi",
               ].map((v, i) => (
                 <Th key={i} textColor='white'>{v}</Th>
@@ -166,9 +167,6 @@ function TableGuest() {
               </Td>
               <Td>
                 {v.person ? v.person + " Orang" : "-"}
-              </Td>
-              <Td>
-                {CurrencyID(v.gift, '-')}
               </Td>
               <Td>
                 {DateOnlyLocale(v.createdAt)}

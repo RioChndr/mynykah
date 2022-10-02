@@ -10,6 +10,7 @@ import { useMemo, useState } from "react"
 import { InvitationContainer } from "../../../components/invitation-card/Container"
 import { InvitationFormGift } from "../../../components/invitation-card/FormGift"
 import * as yup from 'yup'
+import { useAppConfig } from "apps/frontend/user/config/app-config"
 
 interface FormInterface {
   name: string,
@@ -21,6 +22,7 @@ export function InvitationNotJoin(props: any) {
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
   const toast = useToast()
+  const appConfig = useAppConfig()
 
   const validationSchema = useMemo(() => {
     return yup.object().shape({
@@ -53,7 +55,7 @@ export function InvitationNotJoin(props: any) {
       toast({
         title: 'Berhasil simpan RSVP',
         status: 'success',
-        description: 'Terima kasih telah konfirmasi undangan',
+        description: 'Terima kasih telah konfirmasi undangan. Akan kembali dalam 3 detik',
         duration: 3000,
         onCloseComplete: () => {
           router.push(`/invitation/${props.data.id}`)
@@ -97,12 +99,12 @@ export function InvitationNotJoin(props: any) {
                         ))}
                       </Stack>
                     </RadioGroup>
-                    <Stack>
+                    {appConfig.featureGift && <Stack>
                       <Heading size='lg' textAlign='center'>
                         Gift / Hadiah
                       </Heading>
                       <InvitationFormGift value={values.gift} onChange={(val: any) => setFieldValue('gift', val)} />
-                    </Stack>
+                    </Stack>}
                     <Stack>
                       <Button type='submit' colorScheme="gray" isLoading={isLoading}>
                         Saya tidak Hadir
