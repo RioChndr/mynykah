@@ -2,6 +2,7 @@ import { Box, Button, Center, Container, Flex, Heading, Stack, Text } from '@cha
 import Link from 'next/link';
 import { HeadTitle } from '../components/common/HeadTitle';
 import { TitleApp } from '../components/common/TitleApp';
+import { useAuth } from '../lib/auth/useAuth';
 
 function CardFeature({ title, desc }: { title?: string, desc?: string }) {
   return (
@@ -14,6 +15,7 @@ function CardFeature({ title, desc }: { title?: string, desc?: string }) {
   )
 }
 export function Index() {
+  const { user } = useAuth()
 
   const listFeature = [
     [
@@ -44,7 +46,7 @@ export function Index() {
           Buat kartu undangan modern disini. <strong>Gratis</strong>
         </Text>
         <div>
-          <Link href='/dashboard' passHref>
+          <Link href={user ? '/dashboard' : '/login'} passHref>
             <Button as='a'>
               Mulai disini
             </Button>
