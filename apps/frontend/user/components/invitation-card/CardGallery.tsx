@@ -16,6 +16,8 @@ export interface CardGalleryCuteProps {
 export const CardGalleryCuteList = (props: { items: CardGalleryCuteProps[] }) => {
   const containerList = useRef<HTMLDivElement>()
 
+  if (!props.items || !props.items.length) return <></>
+
   const ButtonArrow = ({ children, onClick }) => {
     return (
       <Circle border='1px' borderColor='gray.300' color='gray.500' cursor='pointer' onClick={onClick}>

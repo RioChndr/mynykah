@@ -1,10 +1,9 @@
-import { Box, Flex, Button, Text, Container, Avatar, Wrap, WrapItem, HStack, Menu, MenuButton, MenuList, MenuItem, Link, useBreakpointValue, useColorModeValue, ButtonGroup, IconButton, Drawer, useDisclosure, DrawerOverlay, DrawerContent, DrawerCloseButton, DrawerHeader, DrawerBody, Stack, Divider, StackDirection, Badge } from "@chakra-ui/react";
+import { Avatar, Box, Button, Container, Divider, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerHeader, DrawerOverlay, Flex, HStack, IconButton, Menu, MenuButton, MenuItem, MenuList, Stack, StackDirection, Text, useBreakpointValue, useColorModeValue, useDisclosure } from "@chakra-ui/react";
+import NextLink from 'next/link';
 import Router from "next/router";
-import NextLink from 'next/link'
+import React, { useMemo } from "react";
+import { FiMenu } from 'react-icons/fi';
 import { useAuth } from "../../lib/auth/useAuth";
-import { FiMenu } from 'react-icons/fi'
-import React, { useEffect, useMemo } from "react";
-import { AppConfig } from "../../config/app-config";
 import { TitleApp } from "../common/TitleApp";
 
 interface MenuItemInterface {
@@ -175,11 +174,9 @@ export default function Navbar() {
       <Box as="nav" bg="bg-surface" boxShadow={useColorModeValue('sm', 'sm-dark')}>
         <Container py={{ base: '4', lg: '5' }}>
           <HStack spacing="10" justify="space-between">
-            <NextLink href='/' passHref>
-              <Text as='a' fontSize='2xl' fontWeight='bold'>
-                <TitleApp></TitleApp>
-              </Text>
-            </NextLink>
+            <Text fontSize='2xl' fontWeight='bold'>
+              <TitleApp></TitleApp>
+            </Text>
             {isDesktop ? (
               <Flex justify="space-between" flex="1">
                 <ListMenuComponent />

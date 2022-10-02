@@ -2,25 +2,22 @@ import { Box, Button, Center, Container, Flex, Heading, Stack, Text } from '@cha
 import Link from 'next/link';
 import { HeadTitle } from '../components/common/HeadTitle';
 import { TitleApp } from '../components/common/TitleApp';
-import { AppConfig } from '../config/app-config';
+import { useAuth } from '../lib/auth/useAuth';
 
+function CardFeature({ title, desc }: { title?: string, desc?: string }) {
+  return (
+    <Box px='3' py='6' borderRadius='4' border='1px' borderColor='primary' textAlign='center' width={{ base: 'full', lg: '30%' }}>
+      <Heading size='md'>
+        {title || 'feature 1'}
+      </Heading>
+      {desc || 'description'}
+    </Box>
+  )
+}
 export function Index() {
-  const CardFeature = ({ title, desc }: { title?: string, desc?: string }) => {
-    return (
-      <Box px='3' py='6' borderRadius='4' border='1px' borderColor='primary' textAlign='center' width={{ base: 'full', lg: '30%' }}>
-        <Heading size='md'>
-          {title || 'feature 1'}
-        </Heading>
-        {desc || 'description'}
-      </Box>
-    )
-  }
+  const { user } = useAuth()
 
   const listFeature = [
-    [
-      'Custom Theme',
-      'Peronalisasi tema sesuaikan dengan hubungan anda'
-    ],
     [
       'RSVP',
       'Fitur yang memastikan undangan anda dibalas dan datang sesuai kapasitas acara'
@@ -49,7 +46,7 @@ export function Index() {
           Buat kartu undangan modern disini. <strong>Gratis</strong>
         </Text>
         <div>
-          <Link href='/dashboard' passHref>
+          <Link href={user ? '/dashboard' : '/login'} passHref>
             <Button as='a'>
               Mulai disini
             </Button>
@@ -61,13 +58,15 @@ export function Index() {
           <Heading size='lg' textAlign='center' mb='3'>
             Feature
           </Heading>
-          <Stack direction={{ base: 'column', lg: 'row' }}>
-            {
-              listFeature.map((feat, i) => (
-                <CardFeature key={i} title={feat[0]} desc={feat[1]} />
-              ))
-            }
-          </Stack>
+          <Center>
+            <Flex direction={{ base: 'column', lg: 'row' }} justifyContent='center' gap={3}>
+              {
+                listFeature.map((feat, i) => (
+                  <CardFeature key={i} title={feat[0]} desc={feat[1]} />
+                ))
+              }
+            </Flex>
+          </Center>
         </Stack>
       </Container>
     </Center>

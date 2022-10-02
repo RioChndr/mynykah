@@ -9,7 +9,7 @@ export function Footer() {
         </Text>
         <Box>
           <Text fontWeight='semibold'>
-            <a href='/term-and-condition.html'>Term and Condition</a>
+            <a href='/terms.html'>Term and Condition</a>
           </Text>
         </Box>
       </Box>

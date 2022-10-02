@@ -1,5 +1,6 @@
 import { ChakraProvider } from "@chakra-ui/react";
-import React, { ReactElement } from "react";
+import { ReactElement } from "react";
+import { AppConfigProvider } from "../config/app-config";
 import { AuthContextProvider } from "../lib/auth/useAuth";
 import { SwrConfigProvider } from "../lib/useFetch/swr-config-provider";
 import { ThemeChakra } from "../theme/theme";
@@ -9,13 +10,15 @@ import LayoutDefault from "./default";
 export function LayoutSystem(props: AppPropsOptions & { children?: ReactElement }) {
   // base component must be provide ChalkraProvider
   const BaseComponent = ({ children }) => (
-    <AuthContextProvider>
-      <SwrConfigProvider>
-        <ChakraProvider theme={ThemeChakra}>
-          {children}
-        </ChakraProvider>
-      </SwrConfigProvider>
-    </AuthContextProvider>
+    <AppConfigProvider>
+      <AuthContextProvider>
+        <SwrConfigProvider>
+          <ChakraProvider theme={ThemeChakra}>
+            {children}
+          </ChakraProvider>
+        </SwrConfigProvider>
+      </AuthContextProvider>
+    </AppConfigProvider>
   )
 
   if (props.Component.noLayout) {
