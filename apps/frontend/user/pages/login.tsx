@@ -1,8 +1,7 @@
 import { Alert, AlertIcon, AlertTitle, Box, Center, CircularProgress, Text } from "@chakra-ui/react";
 import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
-import Head from "next/head";
-import Router, { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { useCallback, useEffect, useState } from "react";
 import { HeadTitle } from "../components/common/HeadTitle";
 import { TitleApp } from "../components/common/TitleApp";
 import { useAuth } from "../lib/auth/useAuth";
@@ -27,6 +26,11 @@ export function Login(props) {
     }
   }, [user])
 
+  const onSignInCallback = useCallback((googleUser) => {
+    onSignIn(googleUser)
+  }, [])
+
+  /** use callback */
   async function onSignIn(googleUser: any) {
     try {
       setIsLoading(true)
@@ -78,7 +82,7 @@ export function Login(props) {
                 : ''}
               <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}>
                 <GoogleLogin
-                  onSuccess={onSignIn}
+                  onSuccess={onSignInCallback}
                   onError={() => {
                     console.log('Login Failed');
                   }}
