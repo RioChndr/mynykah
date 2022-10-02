@@ -1,4 +1,4 @@
-import { Box, Button, Center, Container, Heading, Stack, Text } from '@chakra-ui/react';
+import { Box, Button, Center, Container, Flex, Heading, Stack, Text } from '@chakra-ui/react';
 import Link from 'next/link';
 import { HeadTitle } from '../components/common/HeadTitle';
 import { TitleApp } from '../components/common/TitleApp';
@@ -16,10 +16,6 @@ function CardFeature({ title, desc }: { title?: string, desc?: string }) {
 export function Index() {
 
   const listFeature = [
-    [
-      'Custom Theme',
-      'Peronalisasi tema sesuaikan dengan hubungan anda'
-    ],
     [
       'RSVP',
       'Fitur yang memastikan undangan anda dibalas dan datang sesuai kapasitas acara'
@@ -60,13 +56,15 @@ export function Index() {
           <Heading size='lg' textAlign='center' mb='3'>
             Feature
           </Heading>
-          <Stack direction={{ base: 'column', lg: 'row' }}>
-            {
-              listFeature.map((feat, i) => (
-                <CardFeature key={i} title={feat[0]} desc={feat[1]} />
-              ))
-            }
-          </Stack>
+          <Center>
+            <Flex direction={{ base: 'column', lg: 'row' }} justifyContent='center' gap={3}>
+              {
+                listFeature.map((feat, i) => (
+                  <CardFeature key={i} title={feat[0]} desc={feat[1]} />
+                ))
+              }
+            </Flex>
+          </Center>
         </Stack>
       </Container>
     </Center>
