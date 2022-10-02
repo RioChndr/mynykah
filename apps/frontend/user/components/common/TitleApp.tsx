@@ -1,9 +1,10 @@
-import { Badge } from "@chakra-ui/react";
+import { Badge, Text } from "@chakra-ui/react";
 import Link from "next/link";
-import { AppConfig } from "../../config/app-config";
+import { useAppConfig } from "../../config/app-config";
 
 function BadgeBeta() {
-  if (!AppConfig.isBeta) return <></>
+  const appConfig = useAppConfig();
+  if (!appConfig.isBeta) return <></>
   return (
     <Link href='/about' passHref>
       <Badge as='a' colorScheme="red" ml="1">
@@ -14,9 +15,15 @@ function BadgeBeta() {
 }
 
 export function TitleApp() {
+  const appConfig = useAppConfig();
   return (
     <>
-      {AppConfig.name} <BadgeBeta />
+      <Link href='/' passHref>
+        <Text as='a'>
+          {appConfig.name}
+        </Text>
+      </Link>
+      <BadgeBeta />
     </>
   )
 }

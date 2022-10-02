@@ -1,20 +1,19 @@
-import { Box, Button, Center, Container, Flex, Heading, Stack, Text } from '@chakra-ui/react';
+import { Box, Button, Center, Container, Heading, Stack, Text } from '@chakra-ui/react';
 import Link from 'next/link';
 import { HeadTitle } from '../components/common/HeadTitle';
 import { TitleApp } from '../components/common/TitleApp';
-import { AppConfig } from '../config/app-config';
 
+function CardFeature({ title, desc }: { title?: string, desc?: string }) {
+  return (
+    <Box px='3' py='6' borderRadius='4' border='1px' borderColor='primary' textAlign='center' width={{ base: 'full', lg: '30%' }}>
+      <Heading size='md'>
+        {title || 'feature 1'}
+      </Heading>
+      {desc || 'description'}
+    </Box>
+  )
+}
 export function Index() {
-  const CardFeature = ({ title, desc }: { title?: string, desc?: string }) => {
-    return (
-      <Box px='3' py='6' borderRadius='4' border='1px' borderColor='primary' textAlign='center' width={{ base: 'full', lg: '30%' }}>
-        <Heading size='md'>
-          {title || 'feature 1'}
-        </Heading>
-        {desc || 'description'}
-      </Box>
-    )
-  }
 
   const listFeature = [
     [

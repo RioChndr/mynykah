@@ -1,14 +1,15 @@
-import { AppPropsOptions } from '../type/app-type';
-import { LayoutSystem } from '../layouts/layout-system';
 import Head from 'next/head';
-import React from 'react';
-import { AppConfig } from '../config/app-config';
+import { useAppConfig } from '../config/app-config';
+import { LayoutSystem } from '../layouts/layout-system';
+import { AppPropsOptions } from '../type/app-type';
 
 function CustomApp(props: AppPropsOptions) {
+  const appConfig = useAppConfig()
+
   return <LayoutSystem {...props}>
     <>
       <Head>
-        <title>{AppConfig.name}</title>
+        <title>{appConfig.name}</title>
         <link rel="icon" type="image/x-icon" href="/icon.png" />
       </Head>
       <props.Component {...props.pageProps} />
