@@ -2,7 +2,7 @@ import { createContext, useContext } from "react";
 
 const AppConfig = {
   name: 'Mynykah',
-  isBeta: true,
+  isBeta: false,
   featureGift: false
 }
 
